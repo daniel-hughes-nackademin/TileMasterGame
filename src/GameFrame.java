@@ -2,15 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 
 public class GameFrame extends JFrame implements ActionListener {
 
     private static String title = "Tile Master - The Amazing Puzzle Game";
     int width = 900;
     int height = 800; //Calculating height by desired ratio
-
-    JLayeredPane layeredPane = new JLayeredPane();
 
 
     public GameFrame(){
@@ -21,8 +18,7 @@ public class GameFrame extends JFrame implements ActionListener {
         this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        this.add(layeredPane);
-        this.setVisible(true);
+        //this.setVisible(true);
 
     }
 
@@ -37,28 +33,59 @@ public class GameFrame extends JFrame implements ActionListener {
     }
 
     public void initializeMainMenu(){
-        this.layeredPane.add(new ImagePanel("Graphics/Metal Background Image.jpg", this.width, this.height), 0);
+        //=====================================Adding the background panel=============================================
+        ImagePanel backgroundPanel = new ImagePanel("Graphics/Metal Background Image.jpg", this.width, this.height);
+        backgroundPanel.setLayout(new BorderLayout());
+        this.add(backgroundPanel);
 
-
-        JLabel headerTitle = new JLabel("Tile Master - Are You Ready?");
-        headerTitle.setFont(new Font("Georgia", Font.BOLD, 48));
-        headerTitle.setForeground(Color.BLACK);
-        headerTitle.setBounds(this.width/2 - 370, 0, 850, 100);
+        //=====================================Making title Label and panel============================================
+        JLabel titleLabel = new JLabel("Tile Master - The Puzzle Game");
+        titleLabel.setFont(new Font("Georgia", Font.BOLD, 48));
+        titleLabel.setForeground(Color.BLACK);
 
         ImagePanel headerPanel = new ImagePanel("Graphics/Fire Background.jpg", this.width, 100);
-        headerPanel.setBounds(0,0, this.width, 100);
-        headerPanel.add(headerTitle);
-        layeredPane.add(headerPanel, 1);
+        headerPanel.setLayout(new GridBagLayout());
+        headerPanel.add(titleLabel, new GridBagConstraints()); //Centers the component
 
-        ImagePanel newGamePanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 100);
-        newGamePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        newGamePanel.setBounds(0, this.height - 115, this.width, 100);
+
+        //=====================================Making top panels======================================================
+        JPanel topComponentPanel = new JPanel(new BorderLayout()); //Top component panel for toolbar and header panel
+
+        ImagePanel topButtonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 80);
+        topButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        MenuButton timerPlayButton = new MenuButton("Start Timer", "Graphics/Metallic Button.jpg", 200, 70);
+        timerPlayButton.addActionListener(this);
+        MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg", 200, 70);
+        shuffleButton.addActionListener(this);
+
+        JLabel chooseSizeLabel = new JLabel("Choose Size: ");
+        chooseSizeLabel.setForeground(Color.RED);
+
+
+        topButtonPanel.add(timerPlayButton);
+        topButtonPanel.add(shuffleButton);
+        topButtonPanel.add(chooseSizeLabel);
+
+
+
+        //=====================Adding top panel components to background panel======================================
+        topComponentPanel.add(topButtonPanel, BorderLayout.NORTH);
+        topComponentPanel.add(headerPanel, BorderLayout.SOUTH);
+
+        backgroundPanel.add(topComponentPanel, BorderLayout.NORTH);
+
+
+        //=====================Making and Adding Puzzle Board=======================================================
+        JPanel puzzleBoard = new PuzzleBoard();
+
+
+        //=====================================Making bottom menu panels===============================================
+        ImagePanel menuButtonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 80);
+        menuButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         ImagePanel buttonGridPanel = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 200, 400);
         buttonGridPanel.setBounds(width - 200, 100, 200, 400);
-
-
-        //newGamePanel.setBounds(this.width/2 - 100,this.height/2 - 200, 200, 400);
 
         MenuButton numberGame = new MenuButton("Number Game", "Graphics/Metallic Button.jpg", 200, 70);
         numberGame.addActionListener(this);
@@ -69,18 +96,16 @@ public class GameFrame extends JFrame implements ActionListener {
         MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg", 200, 70);
         optionsMenu.addActionListener(this);
 
-        newGamePanel.add(numberGame);
-        newGamePanel.add(pictureGame);
-        newGamePanel.add(customSizeGame);
-        newGamePanel.add(optionsMenu);
-        //newGamePanel.add(buttonGridPanel);
+        menuButtonPanel.add(numberGame);
+        menuButtonPanel.add(pictureGame);
+        menuButtonPanel.add(customSizeGame);
+        menuButtonPanel.add(optionsMenu);
 
-        layeredPane.add(newGamePanel, 1);
-        layeredPane.add(buttonGridPanel, 1);
-
+        backgroundPanel.add(menuButtonPanel, BorderLayout.SOUTH);
+        //layeredPane.add(buttonGridPanel, 1);
 
 
-
+        this.setVisible(true);
     }
 
 
