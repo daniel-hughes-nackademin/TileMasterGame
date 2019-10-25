@@ -7,8 +7,7 @@ public class ImagePanel extends JPanel {
     private BufferedImage image;
 
     public ImagePanel(String imagePath, int width, int height){
-        this.image = ImageTool.loadImage(imagePath);
-        this.image = ImageTool.getResizedImage(image, width, height);
+        this.image = ImageTool.loadResizedImage(imagePath, width, height);
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);
         setMinimumSize(size);
@@ -19,7 +18,9 @@ public class ImagePanel extends JPanel {
 
 
     @Override
-public void paintComponent(Graphics g){g.drawImage(image, 0, 0, null);}
+public void paintComponent(Graphics g){
+        g.drawImage(image, 0, 0, null);
+    }
 
 
 }

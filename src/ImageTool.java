@@ -25,4 +25,19 @@ public class ImageTool {
         return resizedImage;
     }
 
+    public static BufferedImage loadResizedImage(String filePath, int width, int height){
+        BufferedImage image = loadImage(filePath);
+        image = getResizedImage(image, width, height);
+
+        return image;
+    }
+
+    public static ImageIcon makeScaledImageIcon(String filePath, int width, int height){
+        BufferedImage image = loadImage(filePath);
+        Image imageScaled = image.getScaledInstance(width,height, Image.SCALE_DEFAULT);
+        ImageIcon icon = new ImageIcon(imageScaled);
+
+        return icon;
+    }
+
 }

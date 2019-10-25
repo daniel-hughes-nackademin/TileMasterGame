@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
-public class GameFrame extends JFrame {
+public class GameFrame extends JFrame implements ActionListener {
 
     private static String title = "Tile Master - The Amazing Puzzle Game";
     int width = 900;
@@ -48,22 +50,34 @@ public class GameFrame extends JFrame {
         headerPanel.add(headerTitle);
         layeredPane.add(headerPanel, 1);
 
-        ImagePanel newGamePanel = new ImagePanel("Graphics/Metal Background Image.jpg", 200, 400);
-        newGamePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        JPanel buttonGridPanel = new JPanel(new GridLayout(0,1));
+        //ImagePanel newGamePanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", 200, 400);
+        //newGamePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+        ImagePanel buttonGridPanel = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 200, 400);
+        buttonGridPanel.setLayout(new GridLayout(0,1, 0,40));
+        buttonGridPanel.setBounds(width - 200, 100, 200, 400);
 
 
-        newGamePanel.setBounds(this.width/2 - 100,this.height/2 - 200, 200, 400);
-        newGamePanel.setOpaque(false);
+        //newGamePanel.setBounds(this.width/2 - 100,this.height/2 - 200, 200, 400);
 
-        JButton numberGame = new JButton("Number Game");
-        numberGame.setPreferredSize(new Dimension(200, 50));
+        MenuButton numberGame = new MenuButton("Number Game", "Graphics/Metallic Button.jpg", 200, 70);
+        numberGame.addActionListener(this);
+        MenuButton pictureGame = new MenuButton("Picture Game", "Graphics/Metallic Button.jpg", 200, 70);
+        pictureGame.addActionListener(this);
+        MenuButton customSizeGame = new MenuButton("Custom Size Game", "Graphics/Metallic Button.jpg", 200, 70);
+        customSizeGame.addActionListener(this);
+        MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg", 200, 70);
+        optionsMenu.addActionListener(this);
+
         buttonGridPanel.add(numberGame);
+        buttonGridPanel.add(pictureGame);
+        buttonGridPanel.add(customSizeGame);
+        buttonGridPanel.add(optionsMenu);
 
-        newGamePanel.add(buttonGridPanel);
+        //newGamePanel.add(buttonGridPanel);
 
 
-        layeredPane.add(newGamePanel, 1);
+        layeredPane.add(buttonGridPanel, 1);
+
 
 
 
@@ -74,4 +88,8 @@ public class GameFrame extends JFrame {
     public void startNewGame(){
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
 }
