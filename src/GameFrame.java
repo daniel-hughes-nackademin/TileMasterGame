@@ -34,8 +34,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
     public void initializeMainMenu(){
         //=====================================Adding the background panel=============================================
-        ImagePanel backgroundPanel = new ImagePanel("Graphics/Metal Background Image.jpg", this.width, this.height);
-        backgroundPanel.setLayout(new BorderLayout());
+        JPanel backgroundPanel = new JPanel(new BorderLayout());
         this.add(backgroundPanel);
 
         //=====================================Making title Label and panel============================================
@@ -76,16 +75,35 @@ public class GameFrame extends JFrame implements ActionListener {
         backgroundPanel.add(topComponentPanel, BorderLayout.NORTH);
 
 
-        //=====================Making and Adding Puzzle Board=======================================================
-        JPanel puzzleBoard = new PuzzleBoard();
+        //=====================Making and Adding Advertising===========================================================
+        JPanel advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
+        backgroundPanel.add(advertisingBanner, BorderLayout.WEST);
+
+
+
+        //=====================Making and Adding Puzzle Board===========================================================
+        PuzzleBoard puzzleBoard = new PuzzleBoard("Graphics/Military Anime Girl.jpg", 500,500);
+        //Add buttonList to PuzzleBoard class etc, complete game and class
+
+        backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
+
+        //=====================Making and Adding Right Side Panel===========================================================
+        JPanel eastComponentPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 500);
+        eastComponentPanel.setLayout(new BorderLayout());
+
+        backgroundPanel.add(eastComponentPanel, BorderLayout.EAST);
+
+        ImagePanel miniPicture = new ImagePanel(puzzleBoard.getImagePath(), 250, 250);
+        miniPicture.setBorder(BorderFactory.createLineBorder(Color.black, 5));
+        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+
+        //Add Timer/move counter panel below mini picture, and add facial expressions at top of advertising banner
 
 
         //=====================================Making bottom menu panels===============================================
-        ImagePanel menuButtonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 80);
+        ImagePanel menuButtonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 85);
         menuButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        ImagePanel buttonGridPanel = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 200, 400);
-        buttonGridPanel.setBounds(width - 200, 100, 200, 400);
 
         MenuButton numberGame = new MenuButton("Number Game", "Graphics/Metallic Button.jpg", 200, 70);
         numberGame.addActionListener(this);
@@ -102,7 +120,6 @@ public class GameFrame extends JFrame implements ActionListener {
         menuButtonPanel.add(optionsMenu);
 
         backgroundPanel.add(menuButtonPanel, BorderLayout.SOUTH);
-        //layeredPane.add(buttonGridPanel, 1);
 
 
         this.setVisible(true);

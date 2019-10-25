@@ -5,17 +5,26 @@ import java.awt.image.BufferedImage;
 public class ImagePanel extends JPanel {
 
     private BufferedImage image;
+    protected String imagePath;
 
     public ImagePanel(String imagePath, int width, int height){
-        this.image = ImageTool.loadResizedImage(imagePath, width, height);
+        this.imagePath = imagePath;
+        this.image = ImageTool.loadResizedImage(this.imagePath, width, height);
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);
         setMinimumSize(size);
         setMaximumSize(size);
         setSize(size);
-        setLayout(null);
     }
 
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
 
     @Override
 public void paintComponent(Graphics g){
