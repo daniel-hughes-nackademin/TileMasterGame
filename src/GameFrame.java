@@ -8,7 +8,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
     private static String title = "Tile Master - The Amazing Puzzle Game";
     int width = 900;
-    int height = width*1; //Calculating height by desired ratio
+    int height = 800; //Calculating height by desired ratio
 
     JLayeredPane layeredPane = new JLayeredPane();
 
@@ -50,10 +50,11 @@ public class GameFrame extends JFrame implements ActionListener {
         headerPanel.add(headerTitle);
         layeredPane.add(headerPanel, 1);
 
-        //ImagePanel newGamePanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", 200, 400);
-        //newGamePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+        ImagePanel newGamePanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 100);
+        newGamePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        newGamePanel.setBounds(0, this.height - 115, this.width, 100);
+
         ImagePanel buttonGridPanel = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 200, 400);
-        buttonGridPanel.setLayout(new GridLayout(0,1, 0,40));
         buttonGridPanel.setBounds(width - 200, 100, 200, 400);
 
 
@@ -68,14 +69,13 @@ public class GameFrame extends JFrame implements ActionListener {
         MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg", 200, 70);
         optionsMenu.addActionListener(this);
 
-        buttonGridPanel.add(numberGame);
-        buttonGridPanel.add(pictureGame);
-        buttonGridPanel.add(customSizeGame);
-        buttonGridPanel.add(optionsMenu);
-
+        newGamePanel.add(numberGame);
+        newGamePanel.add(pictureGame);
+        newGamePanel.add(customSizeGame);
+        newGamePanel.add(optionsMenu);
         //newGamePanel.add(buttonGridPanel);
 
-
+        layeredPane.add(newGamePanel, 1);
         layeredPane.add(buttonGridPanel, 1);
 
 
