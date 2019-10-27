@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GameFrame extends JFrame implements ActionListener {
@@ -12,10 +13,10 @@ public class GameFrame extends JFrame implements ActionListener {
     int height = 800; //Calculating height by desired ratio
     JLabel showSizeLabel;
     JSlider sizeSlider;
-    protected int gridSize = 6;
+    protected int gridSize = 4;
     PuzzleBoard puzzleBoard;
+    JPanel backgroundPanel;
     String imagePath = "Graphics/Military Anime Girl.jpg";
-    List<Tile> tiles = new ArrayList<>();
 
 
     public GameFrame(){
@@ -26,24 +27,15 @@ public class GameFrame extends JFrame implements ActionListener {
         this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        //this.setVisible(true);
+        initializeMainMenu();
 
     }
 
-
-
-
-    //= = = = = = = = = = = = = = =MAIN METHOD = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-    public static void main(String[] args) {
-        GameFrame gameFrame = new GameFrame();
-        gameFrame.initializeMainMenu();
-    }
-    //= = = = = = = = = = = = = = =MAIN METHOD END = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
     public void initializeMainMenu(){
         //=====================================Adding the background panel=============================================
-        JPanel backgroundPanel = new JPanel(new BorderLayout());
+        backgroundPanel = new JPanel(new BorderLayout());
         this.add(backgroundPanel);
 
         //=====================================Making title Label and panel============================================
@@ -63,9 +55,12 @@ public class GameFrame extends JFrame implements ActionListener {
         topButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         MenuButton timerPlayButton = new MenuButton("Start Timer", "Graphics/Metallic Button.jpg");
-        timerPlayButton.addActionListener(this);
+        timerPlayButton.addActionListener(e -> {});
         MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");
-        shuffleButton.addActionListener(this);
+        shuffleButton.addActionListener(e -> {
+            Collections.shuffle(PuzzleBoard.tiles);
+            refreshPuzzleBoard();
+        });
 
 
         ImagePanel scalingPanel = new ImagePanel("Graphics/Wooden Background.jpg", 350, 60);
@@ -166,6 +161,12 @@ public class GameFrame extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
+    private void refreshPuzzleBoard() {
+        backgroundPanel.remove(puzzleBoard);
+        puzzleBoard = new PuzzleBoard(gridSize);
+        backgroundPanel.add(puzzleBoard);
+        this.revalidate();
+    }
 
 
     public void startNewGame(){
