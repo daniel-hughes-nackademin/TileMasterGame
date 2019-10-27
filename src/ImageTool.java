@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class ImageTool {
 
-    public static BufferedImage loadImage(String filePath){
+    private static BufferedImage loadImage(String filePath){
         try{
             return ImageIO.read(ImageTool.class.getResource(filePath));
         } catch (IOException e){
@@ -16,7 +16,7 @@ public class ImageTool {
         return null;
     }
 
-    public static BufferedImage getResizedImage(BufferedImage picture, int width, int height){
+    private static BufferedImage getResizedImage(BufferedImage picture, int width, int height){
         BufferedImage resizedImage = new BufferedImage(width, height, picture.getType());
         Graphics2D g2d = resizedImage.createGraphics();
         g2d.drawImage(picture, 0, 0, width, height, null);

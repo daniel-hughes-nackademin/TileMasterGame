@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -12,19 +13,13 @@ public class ImagePanel extends JPanel {
         this.image = ImageTool.loadResizedImage(this.imagePath, width, height);
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);
-        setMinimumSize(size);
-        setMaximumSize(size);
-        setSize(size);
-    }
-
-
-    public BufferedImage getImage() {
-        return image;
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED), BorderFactory.createEtchedBorder(Color.DARK_GRAY, Color.BLACK)));
     }
 
     public String getImagePath() {
         return imagePath;
     }
+
 
     @Override
 public void paintComponent(Graphics g){

@@ -2,12 +2,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameFrame extends JFrame implements ActionListener {
 
     private static String title = "Tile Master - The Amazing Puzzle Game";
     int width = 900;
     int height = 800; //Calculating height by desired ratio
+    JLabel showSizeLabel;
+    JSlider sizeSlider;
+    protected int gridSize = 6;
+    PuzzleBoard puzzleBoard;
+    String imagePath = "Graphics/Military Anime Girl.jpg";
+    List<Tile> tiles = new ArrayList<>();
 
 
     public GameFrame(){
@@ -25,12 +33,13 @@ public class GameFrame extends JFrame implements ActionListener {
 
 
 
-
+    //= = = = = = = = = = = = = = =MAIN METHOD = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
     public static void main(String[] args) {
         GameFrame gameFrame = new GameFrame();
         gameFrame.initializeMainMenu();
-
     }
+    //= = = = = = = = = = = = = = =MAIN METHOD END = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
 
     public void initializeMainMenu(){
         //=====================================Adding the background panel=============================================
@@ -53,18 +62,50 @@ public class GameFrame extends JFrame implements ActionListener {
         ImagePanel topButtonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 80);
         topButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        MenuButton timerPlayButton = new MenuButton("Start Timer", "Graphics/Metallic Button.jpg", 200, 70);
+        MenuButton timerPlayButton = new MenuButton("Start Timer", "Graphics/Metallic Button.jpg");
         timerPlayButton.addActionListener(this);
-        MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg", 200, 70);
+        MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");
         shuffleButton.addActionListener(this);
 
-        JLabel chooseSizeLabel = new JLabel("Choose Size: ");
-        chooseSizeLabel.setForeground(Color.RED);
+
+        ImagePanel scalingPanel = new ImagePanel("Graphics/Wooden Background.jpg", 350, 60);
+        scalingPanel.setLayout(new FlowLayout());
+        scalingPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
 
+        //=====================================Making Slider and Labels======================================================
+        JLabel chooseSizeLabel = new JLabel();
+        chooseSizeLabel.setText("Choose Size: ");
+        chooseSizeLabel.setPreferredSize(new Dimension(120, 50));
+        chooseSizeLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+        chooseSizeLabel.setForeground(Color.WHITE);
+        scalingPanel.add(chooseSizeLabel);
+
+        sizeSlider = new JSlider(JSlider.HORIZONTAL, 3,7, gridSize);
+        sizeSlider.setPreferredSize(new Dimension(150, 30));
+        sizeSlider.setMinorTickSpacing(1);
+        sizeSlider.setPaintTicks(true);
+        sizeSlider.addChangeListener(e -> {
+            showSizeLabel.setText("  " + sizeSlider.getValue());
+            gridSize = sizeSlider.getValue();
+            backgroundPanel.remove(puzzleBoard);
+            puzzleBoard = new PuzzleBoard(imagePath, gridSize);
+            backgroundPanel.add(puzzleBoard);
+        });
+        scalingPanel.add(sizeSlider);
+
+        showSizeLabel = new JLabel("  " + sizeSlider.getValue());
+        showSizeLabel.setFont(new Font("Georgia", Font.BOLD, 18));
+        showSizeLabel.setForeground(Color.WHITE);
+        scalingPanel.add(showSizeLabel);
+
+
+        //=====================================Adding top components to panel======================================================
         topButtonPanel.add(timerPlayButton);
         topButtonPanel.add(shuffleButton);
-        topButtonPanel.add(chooseSizeLabel);
+        topButtonPanel.add(new JLabel("                              "));
+        topButtonPanel.add(scalingPanel);
+
 
 
 
@@ -82,7 +123,8 @@ public class GameFrame extends JFrame implements ActionListener {
 
 
         //=====================Making and Adding Puzzle Board===========================================================
-        PuzzleBoard puzzleBoard = new PuzzleBoard("Graphics/Military Anime Girl.jpg", 500,500);
+
+        puzzleBoard = new PuzzleBoard(imagePath, gridSize);
         //Add buttonList to PuzzleBoard class etc, complete game and class
 
         backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
@@ -94,7 +136,6 @@ public class GameFrame extends JFrame implements ActionListener {
         backgroundPanel.add(eastComponentPanel, BorderLayout.EAST);
 
         ImagePanel miniPicture = new ImagePanel(puzzleBoard.getImagePath(), 250, 250);
-        miniPicture.setBorder(BorderFactory.createLineBorder(Color.black, 5));
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
 
         //Add Timer/move counter panel below mini picture, and add facial expressions at top of advertising banner
@@ -105,13 +146,13 @@ public class GameFrame extends JFrame implements ActionListener {
         menuButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 
-        MenuButton numberGame = new MenuButton("Number Game", "Graphics/Metallic Button.jpg", 200, 70);
+        MenuButton numberGame = new MenuButton("Number Game", "Graphics/Metallic Button.jpg");
         numberGame.addActionListener(this);
-        MenuButton pictureGame = new MenuButton("Picture Game", "Graphics/Metallic Button.jpg", 200, 70);
+        MenuButton pictureGame = new MenuButton("Picture Game", "Graphics/Metallic Button.jpg");
         pictureGame.addActionListener(this);
-        MenuButton customSizeGame = new MenuButton("Custom Size Game", "Graphics/Metallic Button.jpg", 200, 70);
+        MenuButton customSizeGame = new MenuButton("Custom Size Game", "Graphics/Metallic Button.jpg");
         customSizeGame.addActionListener(this);
-        MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg", 200, 70);
+        MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg");
         optionsMenu.addActionListener(this);
 
         menuButtonPanel.add(numberGame);
