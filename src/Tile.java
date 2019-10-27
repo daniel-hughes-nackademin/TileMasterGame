@@ -7,6 +7,7 @@ public class Tile extends JButton {
     int sideLength;
     int value;
     int x, y;
+    ImageIcon icon = null;
 
     //Makes a SQUARE tile button for the puzzle board with image icon
     public Tile(int gridSize, int value, BufferedImage originalImage) {
@@ -16,11 +17,13 @@ public class Tile extends JButton {
 
         if (value == gridSize*gridSize - 1) //If it's last tile in the list, make it black instead of a picture tile
             setBackground(Color.BLACK);
-        else
-            setIcon(makeTileImageIcon(originalImage));
+        else{
+            this.icon = makeTileImageIcon(originalImage);
+            setIcon(this.icon);
+        }
     }
 
-    private ImageIcon makeTileImageIcon(BufferedImage originalImage){
+    protected ImageIcon makeTileImageIcon(BufferedImage originalImage){
         BufferedImage tileImage = new BufferedImage(sideLength, sideLength, originalImage.getType());
 
         Graphics2D gr = tileImage.createGraphics();
@@ -38,6 +41,6 @@ public class Tile extends JButton {
 
     @Override
     public String toString() {
-        return "Tile index: " + value + ", x = " + x + ", y = " + y;
+        return "Tile value: " + value + ", x = " + x + ", y = " + y;
     }
 }

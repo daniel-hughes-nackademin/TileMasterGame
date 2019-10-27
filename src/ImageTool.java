@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class ImageTool {
 
-    private static BufferedImage loadImage(String filePath){
+    public static BufferedImage loadImage(String filePath){
         try{
             return ImageIO.read(ImageTool.class.getResource(filePath));
         } catch (IOException e){

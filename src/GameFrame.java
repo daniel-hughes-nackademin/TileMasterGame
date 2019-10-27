@@ -83,9 +83,7 @@ public class GameFrame extends JFrame implements ActionListener {
         sizeSlider.addChangeListener(e -> {
             showSizeLabel.setText("  " + sizeSlider.getValue());
             gridSize = sizeSlider.getValue();
-            backgroundPanel.remove(puzzleBoard);
-            puzzleBoard = new PuzzleBoard(imagePath, gridSize);
-            backgroundPanel.add(puzzleBoard);
+            clearPuzzleAndMakeNewPicturePuzzle();
         });
         scalingPanel.add(sizeSlider);
 
@@ -161,7 +159,14 @@ public class GameFrame extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-    private void refreshPuzzleBoard() {
+    private void clearPuzzleAndMakeNewPicturePuzzle() {
+        backgroundPanel.remove(puzzleBoard);
+        puzzleBoard = new PuzzleBoard(imagePath, gridSize);
+        backgroundPanel.add(puzzleBoard);
+        this.revalidate();
+    }
+
+    public void refreshPuzzleBoard() {
         backgroundPanel.remove(puzzleBoard);
         puzzleBoard = new PuzzleBoard(gridSize);
         backgroundPanel.add(puzzleBoard);
