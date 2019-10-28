@@ -1,13 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class NumberTile extends Tile {
 
     //Makes a SQUARE tile button for the puzzle board with image icon
     public NumberTile (int gridSize, int value, ImageIcon icon) {
         this.sideLength = icon.getIconWidth(); //width equals height since it's a square tile
-        this.value = value;
+        this.correctOrderIndex = value;
         setXandY(value, gridSize);
 
         if (value == gridSize*gridSize - 1) //If it's last tile in the list, make it black instead of a picture tile

@@ -216,12 +216,18 @@ public class PuzzleBoard extends JPanel implements ActionListener {
 
                 Game.gameFrame.refreshPuzzleBoard();
 
+                checkWinCondition();
             }
 
         }
     }
 
-    private void moveTiles(Tile tile){
+    private void checkWinCondition() {
+        for (int i = 0; i < tiles.size(); i++) {
+            if (tiles.get(i).correctOrderIndex != i)
+                return;
+        }
+        JOptionPane.showMessageDialog(Game.gameFrame, "Congratulations!", "Tile Master - Victory", JOptionPane.PLAIN_MESSAGE);
 
     }
 }

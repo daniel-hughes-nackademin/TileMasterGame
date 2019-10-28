@@ -5,19 +5,19 @@ import java.awt.image.BufferedImage;
 public class Tile extends JButton {
 
     int sideLength;
-    int value;
+    int correctOrderIndex;
     int x, y;
     ImageIcon icon = null;
 
     public Tile(){}
 
     //Makes a SQUARE tile button for the puzzle board with image icon
-    public Tile(int gridSize, int value, BufferedImage originalImage) {
+    public Tile(int gridSize, int correctOrderIndex, BufferedImage originalImage) {
         this.sideLength = originalImage.getWidth()/gridSize; //width equals height since it's a square tile
-        this.value = value;
-        setXandY(value, gridSize);
+        this.correctOrderIndex = correctOrderIndex;
+        setXandY(correctOrderIndex, gridSize);
 
-        if (value == gridSize*gridSize - 1) //If it's last tile in the list, make it black instead of a picture tile
+        if (correctOrderIndex == gridSize*gridSize - 1) //If it's last tile in the list, make it black instead of a picture tile
             setBackground(Color.BLACK);
         else{
             this.icon = makeTileImageIcon(originalImage);
@@ -43,6 +43,6 @@ public class Tile extends JButton {
 
     @Override
     public String toString() {
-        return "Tile value: " + value + ", x = " + x + ", y = " + y;
+        return "Tile value: " + correctOrderIndex + ", x = " + x + ", y = " + y;
     }
 }

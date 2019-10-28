@@ -16,10 +16,6 @@ public class ImagePanel extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED), BorderFactory.createEtchedBorder(Color.DARK_GRAY, Color.BLACK)));
     }
 
-    public String getImagePath() {
-        return imagePath;
-    }
-
 
     @Override
 public void paintComponent(Graphics g){
