@@ -93,7 +93,7 @@ public class GameFrame extends JFrame{
         scalingPanel.add(sizeSlider);
 
         showSizeLabel = new JLabel("  " + sizeSlider.getValue());
-        showSizeLabel.setFont(new Font("Georgia", Font.BOLD, 18));
+        showSizeLabel.setFont(new Font("Georgia", Font.BOLD, 32));
         showSizeLabel.setForeground(Color.WHITE);
         scalingPanel.add(showSizeLabel);
 
