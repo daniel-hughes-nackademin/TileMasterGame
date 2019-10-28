@@ -1,7 +1,12 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +21,8 @@ public class GameFrame extends JFrame{
     protected int gridSize = 4;
     PuzzleBoard puzzleBoard;
     JPanel backgroundPanel;
+    JPanel eastComponentPanel;
+    ImagePanel miniPicture;
     String imagePath = "Graphics/Military Anime Girl.jpg";
     boolean isImageGame = true;
 
@@ -128,12 +135,12 @@ public class GameFrame extends JFrame{
         backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
 
         //=====================Making and Adding Right Side Panel===========================================================
-        JPanel eastComponentPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 500);
+        eastComponentPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 500);
         eastComponentPanel.setLayout(new BorderLayout());
 
         backgroundPanel.add(eastComponentPanel, BorderLayout.EAST);
 
-        ImagePanel miniPicture = new ImagePanel(puzzleBoard.getImagePath(), 250, 250);
+        miniPicture = new ImagePanel(puzzleBoard.getImagePath(), 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
 
         //Add Timer/move counter panel below mini picture, and add facial expressions at top of advertising banner
@@ -148,9 +155,10 @@ public class GameFrame extends JFrame{
         numberGame.addActionListener(e -> startNewNumberGame());
         MenuButton pictureGame = new MenuButton("Picture Game", "Graphics/Metallic Button.jpg");
         pictureGame.addActionListener(e -> startNewPictureGame());
-        MenuButton customPictureGame = new MenuButton("Custom Picture Game", "Graphics/Metallic Button.jpg");
+        MenuButton customPictureGame = new MenuButton("Choose Picture", "Graphics/Metallic Button.jpg");
         customPictureGame.addActionListener(e -> {
-
+            if(chooseCustomFile())
+            startNewPictureGame();
         });
         MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg");
         optionsMenu.addActionListener(e -> {
@@ -182,6 +190,10 @@ public class GameFrame extends JFrame{
         backgroundPanel.remove(puzzleBoard);
         puzzleBoard = new PuzzleBoard(imagePath, gridSize);
         backgroundPanel.add(puzzleBoard);
+
+        eastComponentPanel.remove(miniPicture);
+        miniPicture = new ImagePanel(puzzleBoard.getImagePath(), 250, 250);
+        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
         this.revalidate();
 
     }
@@ -194,7 +206,42 @@ public class GameFrame extends JFrame{
         backgroundPanel.remove(puzzleBoard);
         puzzleBoard = new PuzzleBoard(icon, gridSize);
         backgroundPanel.add(puzzleBoard);
-        this.revalidate();
+        //imagePath = "Graphics/Sort The Numbers.jpg";
 
+        eastComponentPanel.remove(miniPicture);
+        miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
+        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        this.revalidate();
+    }
+
+    public boolean chooseCustomFile(){
+        boolean isCorrectFile = false;
+
+        JFileChooser fileChooser = new JFileChooser();
+        int choice = fileChooser.showDialog(Game.gameFrame, "New Game");
+
+        if (choice == JFileChooser.APPROVE_OPTION){
+            File chosenFile = fileChooser.getSelectedFile();
+
+            try {
+                FileInputStream inputStream = new FileInputStream(chosenFile);
+                if(ImageIO.read(inputStream) == null){
+                    JOptionPane.showMessageDialog(Game.gameFrame, "The chosen file must be an image file", "Tile Master - Incorrect File Type", JOptionPane.INFORMATION_MESSAGE);
+                    return isCorrectFile;
+                }
+                isCorrectFile = true;
+
+                String filePath = chosenFile.getPath();
+                this.imagePath = filePath.replace('\\', '/');
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+        return isCorrectFile;
     }
 }

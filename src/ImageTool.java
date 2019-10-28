@@ -2,12 +2,17 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 public class ImageTool {
 
     public static BufferedImage loadImage(String filePath){
         try{
+        File inputFile = new File(filePath);
+        if(inputFile.isAbsolute())
+            return ImageIO.read(inputFile);
+        else
             return ImageIO.read(ImageTool.class.getResource(filePath));
         } catch (IOException e){
             e.printStackTrace();
