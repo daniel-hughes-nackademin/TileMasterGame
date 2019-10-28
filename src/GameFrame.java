@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GameFrame extends JFrame implements ActionListener {
+public class GameFrame extends JFrame{
 
     private static String title = "Tile Master - The Amazing Puzzle Game";
     int width = 900;
@@ -17,6 +17,7 @@ public class GameFrame extends JFrame implements ActionListener {
     PuzzleBoard puzzleBoard;
     JPanel backgroundPanel;
     String imagePath = "Graphics/Military Anime Girl.jpg";
+    boolean isImageGame = true;
 
 
     public GameFrame(){
@@ -83,7 +84,11 @@ public class GameFrame extends JFrame implements ActionListener {
         sizeSlider.addChangeListener(e -> {
             showSizeLabel.setText("  " + sizeSlider.getValue());
             gridSize = sizeSlider.getValue();
-            clearPuzzleAndMakeNewPicturePuzzle();
+
+            if(isImageGame)
+                startNewPictureGame();
+            else
+                startNewNumberGame();
         });
         scalingPanel.add(sizeSlider);
 
@@ -140,17 +145,21 @@ public class GameFrame extends JFrame implements ActionListener {
 
 
         MenuButton numberGame = new MenuButton("Number Game", "Graphics/Metallic Button.jpg");
-        numberGame.addActionListener(this);
+        numberGame.addActionListener(e -> startNewNumberGame());
         MenuButton pictureGame = new MenuButton("Picture Game", "Graphics/Metallic Button.jpg");
-        pictureGame.addActionListener(this);
-        MenuButton customSizeGame = new MenuButton("Custom Size Game", "Graphics/Metallic Button.jpg");
-        customSizeGame.addActionListener(this);
+        pictureGame.addActionListener(e -> startNewPictureGame());
+        MenuButton customPictureGame = new MenuButton("Custom Picture Game", "Graphics/Metallic Button.jpg");
+        customPictureGame.addActionListener(e -> {
+
+        });
         MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg");
-        optionsMenu.addActionListener(this);
+        optionsMenu.addActionListener(e -> {
+
+        });
 
         menuButtonPanel.add(numberGame);
         menuButtonPanel.add(pictureGame);
-        menuButtonPanel.add(customSizeGame);
+        menuButtonPanel.add(customPictureGame);
         menuButtonPanel.add(optionsMenu);
 
         backgroundPanel.add(menuButtonPanel, BorderLayout.SOUTH);
@@ -159,12 +168,6 @@ public class GameFrame extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-    private void clearPuzzleAndMakeNewPicturePuzzle() {
-        backgroundPanel.remove(puzzleBoard);
-        puzzleBoard = new PuzzleBoard(imagePath, gridSize);
-        backgroundPanel.add(puzzleBoard);
-        this.revalidate();
-    }
 
     public void refreshPuzzleBoard() {
         backgroundPanel.remove(puzzleBoard);
@@ -174,11 +177,24 @@ public class GameFrame extends JFrame implements ActionListener {
     }
 
 
-    public void startNewGame(){
+    public void startNewPictureGame(){
+        isImageGame = true;
+        backgroundPanel.remove(puzzleBoard);
+        puzzleBoard = new PuzzleBoard(imagePath, gridSize);
+        backgroundPanel.add(puzzleBoard);
+        this.revalidate();
+
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    public void startNewNumberGame(){
+        isImageGame = false;
+        int iconWidth = puzzleBoard.getWidth()/gridSize;
+
+        ImageIcon icon = ImageTool.makeScaledImageIcon("Graphics/Number Button.jpg", iconWidth, iconWidth);
+        backgroundPanel.remove(puzzleBoard);
+        puzzleBoard = new PuzzleBoard(icon, gridSize);
+        backgroundPanel.add(puzzleBoard);
+        this.revalidate();
 
     }
 }

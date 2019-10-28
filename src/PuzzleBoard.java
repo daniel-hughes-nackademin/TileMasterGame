@@ -61,6 +61,70 @@ public class PuzzleBoard extends JPanel implements ActionListener {
 
     }
 
+    public PuzzleBoard(String imagePath, int gridSize, boolean numberGame) { //Creates a puzzle board with toggle boolean for shuffle
+        tiles.clear();
+        this.imagePath = imagePath;
+        BufferedImage originalImage = ImageTool.loadResizedImage(imagePath, width, height);
+        Dimension size = new Dimension(width, height);
+        setPreferredSize(size);
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED), BorderFactory.createEtchedBorder(Color.DARK_GRAY, Color.BLACK)));
+
+        setLayout(new GridLayout(gridSize, gridSize));
+
+        final int totalNrOfTiles = gridSize * gridSize;
+
+        for (int i = 0; i < totalNrOfTiles - 1; i++) {
+            Tile tile = new Tile(gridSize, i, originalImage);
+            tile.addActionListener(this);
+            tiles.add(tile);
+        }
+
+        if (numberGame == true)
+            Collections.shuffle(tiles);
+
+        Tile blackTile = new Tile(gridSize, totalNrOfTiles - 1, originalImage);
+        blackTile.setEnabled(false);
+        blackTile.addActionListener(this);
+        tiles.add(blackTile);
+
+        for (int i = 0; i < tiles.size(); i++) {
+            tiles.get(i).setXandY(i, gridSize);
+            this.add(tiles.get(i));
+        }
+
+    }
+
+    public PuzzleBoard(ImageIcon icon, int gridSize) { //Creates a puzzle board with shuffled number tiles
+        tiles.clear();
+        Dimension size = new Dimension(width, height);
+        setPreferredSize(size);
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED), BorderFactory.createEtchedBorder(Color.DARK_GRAY, Color.BLACK)));
+
+        setLayout(new GridLayout(gridSize, gridSize));
+
+        final int totalNrOfTiles = gridSize * gridSize;
+
+        for (int i = 0; i < totalNrOfTiles - 1; i++) {
+            NumberTile numberTile = new NumberTile(gridSize, i, icon);
+            numberTile.addActionListener(this);
+            tiles.add(numberTile);
+        }
+
+        Collections.shuffle(tiles);
+
+        NumberTile blackTile = new NumberTile(gridSize, totalNrOfTiles - 1, icon);
+        blackTile.setEnabled(false);
+        blackTile.addActionListener(this);
+        tiles.add(blackTile);
+
+        for (int i = 0; i < tiles.size(); i++) {
+            tiles.get(i).setXandY(i, gridSize);
+            this.add(tiles.get(i));
+        }
+
+    }
+
+
     public String getImagePath() {
         return imagePath;
     }

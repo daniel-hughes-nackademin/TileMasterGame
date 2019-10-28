@@ -9,6 +9,8 @@ public class Tile extends JButton {
     int x, y;
     ImageIcon icon = null;
 
+    public Tile(){}
+
     //Makes a SQUARE tile button for the puzzle board with image icon
     public Tile(int gridSize, int value, BufferedImage originalImage) {
         this.sideLength = originalImage.getWidth()/gridSize; //width equals height since it's a square tile
