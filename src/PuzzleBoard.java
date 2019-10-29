@@ -173,7 +173,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
             return; //Illegal Move - do nothing
         }
         Game.gameFrame.moveCount++;
-        Game.gameFrame.moveCountLabel.setText("Moves Made: " + Game.gameFrame.moveCount);
+        Game.gameFrame.moveCountLabel.setText("Moves: " + Game.gameFrame.moveCount);
     }
 
     private void checkWinCondition() {

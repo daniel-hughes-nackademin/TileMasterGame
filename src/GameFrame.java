@@ -141,14 +141,19 @@ public class GameFrame extends JFrame{
 
 
         //=====================Making and Adding Right Side Panel===========================================================
+        Font georgia = new Font("Georgia", Font.BOLD, 24);
+
         eastComponentPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 500);
         eastComponentPanel.setLayout(new BorderLayout());
 
         miniPicture = new ImagePanel(imagePath, 250, 250);
         ImagePanel moveCountAndTimerPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 250);
+        moveCountAndTimerPanel.setLayout(new GridLayout(4,1));
 
 
-        moveCountLabel = new JLabel("Moves Made: " + moveCount);
+        moveCountLabel = new JLabel("Moves: " + moveCount);
+        moveCountLabel.setFont(georgia);
+        moveCountLabel.setHorizontalAlignment(JLabel.CENTER);
         moveCountAndTimerPanel.add(moveCountLabel);
 
 
@@ -198,7 +203,7 @@ public class GameFrame extends JFrame{
 
     void resetMoveCounter() {
         moveCount = 0;
-        moveCountLabel.setText("Moves Made: " + moveCount);
+        moveCountLabel.setText("Moves: " + moveCount);
     }
 
 
