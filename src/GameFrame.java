@@ -14,6 +14,8 @@ public class GameFrame extends JFrame{
     int width = 900;
     int height = 800;
     int gridSize = 4;
+    int moveCount = 0;
+    JLabel moveCountLabel;
 
 
     JLabel showSizeLabel;
@@ -66,8 +68,10 @@ public class GameFrame extends JFrame{
         timerPlayButton.addActionListener(e -> {});
         MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");
         shuffleButton.addActionListener(e -> {
-            Collections.shuffle(PuzzleBoard.tiles);
-            refreshPuzzleBoard();
+            if(isImageGame)
+                startNewPictureGame();
+            else
+                startNewNumberGame();
         });
 
 
@@ -139,10 +143,19 @@ public class GameFrame extends JFrame{
         eastComponentPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 500);
         eastComponentPanel.setLayout(new BorderLayout());
 
+        miniPicture = new ImagePanel(imagePath, 250, 250);
+        ImagePanel moveCountAndTimerPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 250);
+
+
+        moveCountLabel = new JLabel("Moves Made: " + moveCount);
+        moveCountAndTimerPanel.add(moveCountLabel);
+
+
+
+        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        eastComponentPanel.add(moveCountAndTimerPanel, BorderLayout.SOUTH);
         backgroundPanel.add(eastComponentPanel, BorderLayout.EAST);
 
-        miniPicture = new ImagePanel(imagePath, 250, 250);
-        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
 
         //Add Timer/move counter panel and facial expressions below mini picture, add advertising banner
 
@@ -150,6 +163,8 @@ public class GameFrame extends JFrame{
         puzzleBoard = new PuzzleBoard(imagePath, gridSize);
         automaticallySwapTilesRandomly();
         backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
+
+        resetMoveCounter();
 
         //=====================================Making bottom menu panels===============================================
         ImagePanel menuButtonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 85);
@@ -180,6 +195,11 @@ public class GameFrame extends JFrame{
         this.setVisible(true);
     }
 
+    void resetMoveCounter() {
+        moveCount = 0;
+        moveCountLabel.setText("Moves Made: " + moveCount);
+    }
+
 
     public void refreshPuzzleBoard() {
         removeCenterComponent();
@@ -199,16 +219,17 @@ public class GameFrame extends JFrame{
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel(imagePath, 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
 
 
     public void startNewNumberGame(){
         isImageGame = false;
+        removeCenterComponent();
         int iconWidth = puzzleBoard.getWidth()/gridSize;
 
         ImageIcon icon = ImageTool.makeScaledImageIcon("Graphics/Number Button.jpg", iconWidth, iconWidth);
-        backgroundPanel.remove(puzzleBoard);
         puzzleBoard = new PuzzleBoard(icon, gridSize);
         automaticallySwapTilesRandomly();
         backgroundPanel.add(puzzleBoard);
@@ -216,6 +237,7 @@ public class GameFrame extends JFrame{
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
 
