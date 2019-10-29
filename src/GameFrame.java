@@ -12,15 +12,18 @@ public class GameFrame extends JFrame{
 
     private static String title = "Tile Master - The Amazing Puzzle Game";
     int width = 900;
-    int height = 800; //Calculating height by desired ratio
+    int height = 800;
+    int gridSize = 4;
+
+
     JLabel showSizeLabel;
     JSlider sizeSlider;
-    int gridSize = 4;
     PuzzleBoard puzzleBoard;
     JPanel backgroundPanel;
     ImagePanel advertisingBanner;
     JPanel eastComponentPanel;
     ImagePanel miniPicture;
+
     String imagePath = "Graphics/Military Anime Girl.jpg";
     boolean isImageGame = true;
     AdvertisingManager advertisingManager = new AdvertisingManager();
