@@ -121,13 +121,8 @@ public class PuzzleBoard extends JPanel implements ActionListener {
             tiles.get(i).setXandY(i, gridSize);
             this.add(tiles.get(i));
         }
-
     }
 
-
-    public String getImagePath() {
-        return imagePath;
-    }
 
 
     @Override
@@ -148,7 +143,6 @@ public class PuzzleBoard extends JPanel implements ActionListener {
             if (e.getSource() == selectedTile) {
                 int selectedIndex = nr;
                 if (selectedTile.x == blackTile.x && selectedTile.y < blackTile.y) {
-                    System.out.println(selectedTile + " has same x value, but lower y than black tile: " + blackTile);
 
                     for (int i = selectedIndex; i <= blackTileIndex; i+=Game.gameFrame.gridSize) {
                         tilesToRotate.add(tiles.get(i));
@@ -161,8 +155,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
                         rotateIndex++;
                     }
 
-                } else if (selectedTile.x == blackTile.x && selectedTile.y > blackTile.y) {
-                    System.out.println(selectedTile + " has same x value, but greater y than black tile: " + blackTile);
+                } else if (selectedTile.x == blackTile.x && selectedTile.y > blackTile.y) { ;
 
                     for (int i = blackTileIndex; i <= selectedIndex; i+=Game.gameFrame.gridSize) {
                         tilesToRotate.add(tiles.get(i));
@@ -177,7 +170,6 @@ public class PuzzleBoard extends JPanel implements ActionListener {
 
 
                 } else if (selectedTile.y == blackTile.y && selectedTile.x < blackTile.x) {
-                    System.out.println(selectedTile + " has same y value, but lower x than black tile: " + blackTile);
 
                     for (int i = selectedIndex; i <= blackTileIndex; i++) {
                         tilesToRotate.add(tiles.get(i));
@@ -193,7 +185,6 @@ public class PuzzleBoard extends JPanel implements ActionListener {
 
 
                 } else if (selectedTile.y == blackTile.y && selectedTile.x > blackTile.x) {
-                    System.out.println(selectedTile + " has same y value, but greater x than black tile: " + blackTile);
 
                     for (int i = blackTileIndex; i <= selectedIndex; i++) {
                         tilesToRotate.add(tiles.get(i));
@@ -206,12 +197,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
                         rotateIndex++;
                     }
                 } else {
-                    System.out.println("Different X and Y than black tile: " + selectedTile);
                     return;
-                }
-
-                for (int i = 0; i < tiles.size(); i++) {
-                    System.out.println("Index: " + i + " - " + tiles.get(i));
                 }
 
                 Game.gameFrame.refreshPuzzleBoard();
@@ -227,7 +213,19 @@ public class PuzzleBoard extends JPanel implements ActionListener {
             if (tiles.get(i).correctOrderIndex != i)
                 return;
         }
-        JOptionPane.showMessageDialog(Game.gameFrame, "Congratulations!", "Tile Master - Victory", JOptionPane.PLAIN_MESSAGE);
+
+        if(Game.gameFrame.isImageGame){
+            Game.gameFrame.removeCenterComponent();
+            System.out.println("We got here");
+            Game.gameFrame.backgroundPanel.add(new ImagePanel(Game.gameFrame.imagePath, 500, 500), BorderLayout.CENTER);
+            Game.gameFrame.revalidate();
+        }
+        else{
+            JOptionPane.showMessageDialog(Game.gameFrame, "Congratulations!", "Tile Master - Victory", JOptionPane.PLAIN_MESSAGE);
+            for (Tile tile : tiles) {
+                tile.setEnabled(false);
+            }
+        }
 
     }
 }

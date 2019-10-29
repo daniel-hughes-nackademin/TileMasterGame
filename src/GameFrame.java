@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class GameFrame extends JFrame{
 
@@ -25,7 +26,6 @@ public class GameFrame extends JFrame{
     ImagePanel miniPicture;
     String imagePath = "Graphics/Military Anime Girl.jpg";
     boolean isImageGame = true;
-
 
     public GameFrame(){
         this.setResizable(false);
@@ -130,7 +130,6 @@ public class GameFrame extends JFrame{
         //=====================Making and Adding Puzzle Board===========================================================
 
         puzzleBoard = new PuzzleBoard(imagePath, gridSize);
-        //Add buttonList to PuzzleBoard class etc, complete game and class
 
         backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
 
@@ -140,10 +139,10 @@ public class GameFrame extends JFrame{
 
         backgroundPanel.add(eastComponentPanel, BorderLayout.EAST);
 
-        miniPicture = new ImagePanel(puzzleBoard.getImagePath(), 250, 250);
+        miniPicture = new ImagePanel(imagePath, 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
 
-        //Add Timer/move counter panel below mini picture, and add facial expressions at top of advertising banner
+        //Add Timer/move counter panel and facial expressions below mini picture, add advertising banner
 
 
         //=====================================Making bottom menu panels===============================================
@@ -178,25 +177,26 @@ public class GameFrame extends JFrame{
 
 
     public void refreshPuzzleBoard() {
-        backgroundPanel.remove(puzzleBoard);
+        removeCenterComponent();
         puzzleBoard = new PuzzleBoard(gridSize);
-        backgroundPanel.add(puzzleBoard);
+        backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
         this.revalidate();
     }
 
 
     public void startNewPictureGame(){
         isImageGame = true;
-        backgroundPanel.remove(puzzleBoard);
+        removeCenterComponent();
         puzzleBoard = new PuzzleBoard(imagePath, gridSize);
-        backgroundPanel.add(puzzleBoard);
+        backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
 
         eastComponentPanel.remove(miniPicture);
-        miniPicture = new ImagePanel(puzzleBoard.getImagePath(), 250, 250);
+        miniPicture = new ImagePanel(imagePath, 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
         this.revalidate();
-
+        //manualShuffleTiles();
     }
+
 
     public void startNewNumberGame(){
         isImageGame = false;
@@ -206,12 +206,32 @@ public class GameFrame extends JFrame{
         backgroundPanel.remove(puzzleBoard);
         puzzleBoard = new PuzzleBoard(icon, gridSize);
         backgroundPanel.add(puzzleBoard);
-        //imagePath = "Graphics/Sort The Numbers.jpg";
 
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
         this.revalidate();
+        //manualShuffleTiles();
+    }
+
+    public void manualShuffleTiles(){
+
+        for (int i = 0; i < 500; i++) {
+            Random randomGenerator = new Random();
+            int randomIndex = randomGenerator.nextInt(PuzzleBoard.tiles.size());
+            for (int j = 0; j < PuzzleBoard.tiles.size(); j++) {
+                if(j == randomIndex){
+                    Tile randomTile = PuzzleBoard.tiles.get(randomIndex);
+                    randomTile.doClick();
+                }
+            }
+        }
+
+    }
+
+    protected void removeCenterComponent() {
+        BorderLayout layout = (BorderLayout)backgroundPanel.getLayout();
+        backgroundPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
     }
 
     public boolean chooseCustomFile(){
