@@ -30,6 +30,7 @@ public class GameFrame extends JFrame{
     boolean isImageGame = true;
     AdvertisingManager advertisingManager = new AdvertisingManager();
     boolean isShowingAdvertising = true;
+    boolean isActivatedGameOver = false;
 
     public GameFrame(){
         this.setResizable(false);
