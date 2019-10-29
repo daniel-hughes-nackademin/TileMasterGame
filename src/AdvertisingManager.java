@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,8 @@ public class AdvertisingManager implements Runnable {
 
             try {
                 ImageIO.read(folderFileArray[i]);
-                advertisingImagePath = folderFileArray.toString();
+                advertisingImagePath = folderFileArray[i].getPath().replace('\\', '/');
+                advertisingImagePath = advertisingImagePath.substring(advertisingImagePath.indexOf('/') + 1);
             } catch (IOException e) {
                 e.printStackTrace();
                 continue;
@@ -39,11 +41,14 @@ public class AdvertisingManager implements Runnable {
                     i = 0;
             }
             System.out.println(advertisingImagePath);
-            Game.gameFrame.backgroundPanel.remove(Game.gameFrame.advertisingBanner);
-            Game.gameFrame.advertisingBanner = new ImagePanel(advertisingImagePath, 150, Game.gameFrame.height - 260);
+            BorderLayout layout = (BorderLayout)Game.gameFrame.backgroundPanel.getLayout();
+            Game.gameFrame.backgroundPanel.remove(layout.getLayoutComponent(BorderLayout.WEST));
+            Game.gameFrame.advertisingBanner = new ImagePanel(advertisingImagePath, 150, 540);
+            Game.gameFrame.backgroundPanel.add(Game.gameFrame.advertisingBanner, BorderLayout.WEST);
+            Game.gameFrame.backgroundPanel.revalidate();
 
             try {
-                Thread.sleep(5000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

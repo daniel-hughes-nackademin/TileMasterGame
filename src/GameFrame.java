@@ -221,7 +221,6 @@ public class GameFrame extends JFrame{
         for (int i = 0; i < 500; i++) {
             int randomIndex = random.nextInt(PuzzleBoard.tiles.size());
                 puzzleBoard.swapTiles(PuzzleBoard.tiles.get(randomIndex), randomIndex);
-                System.out.println(PuzzleBoard.tiles.get(randomIndex));
                 puzzleBoard = new PuzzleBoard(gridSize);
         }
     }
