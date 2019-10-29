@@ -90,10 +90,11 @@ public class PuzzleBoard extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        for (int nr = 0; nr < tiles.size(); nr++) {
-            Tile selectedTile = tiles.get(nr);
-            if (e.getSource() == selectedTile) {
-                int selectedIndex = nr;
+        for (int i = 0; i < tiles.size(); i++) {
+
+            if (e.getSource() == tiles.get(i)) {
+                Tile selectedTile = tiles.get(i);
+                int selectedIndex = i;
 
                 swapTiles(selectedTile, selectedIndex);
 
@@ -119,8 +120,6 @@ public class PuzzleBoard extends JPanel implements ActionListener {
         }
 
         if (selectedTile.x == blackTile.x && selectedTile.y < blackTile.y) {
-            System.out.println(blackTileIndex + " " + selectedIndex);
-            System.out.println(Game.gameFrame.gridSize);
 
             for (int i = selectedIndex; i <= blackTileIndex; i += Game.gameFrame.gridSize) {
                 tilesToRotate.add(tiles.get(i));
@@ -183,7 +182,6 @@ public class PuzzleBoard extends JPanel implements ActionListener {
 
         if (Game.gameFrame.isImageGame) {
             Game.gameFrame.removeCenterComponent();
-            System.out.println("We got here");
             Game.gameFrame.backgroundPanel.add(new ImagePanel(Game.gameFrame.imagePath, 500, 500), BorderLayout.CENTER);
             Game.gameFrame.revalidate();
         } else {

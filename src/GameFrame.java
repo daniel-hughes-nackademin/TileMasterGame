@@ -18,10 +18,13 @@ public class GameFrame extends JFrame{
     int gridSize = 4;
     PuzzleBoard puzzleBoard;
     JPanel backgroundPanel;
+    ImagePanel advertisingBanner;
     JPanel eastComponentPanel;
     ImagePanel miniPicture;
     String imagePath = "Graphics/Military Anime Girl.jpg";
     boolean isImageGame = true;
+    AdvertisingManager advertisingManager = new AdvertisingManager();
+    boolean isShowingAdvertising = true;
 
     public GameFrame(){
         this.setResizable(false);
@@ -116,8 +119,15 @@ public class GameFrame extends JFrame{
 
 
         //=====================Making and Adding Advertising===========================================================
-        JPanel advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
-        backgroundPanel.add(advertisingBanner, BorderLayout.WEST);
+        if (isShowingAdvertising){
+            advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
+            backgroundPanel.add(advertisingBanner, BorderLayout.WEST);
+            advertisingManager.showAdvertising();
+        }
+        else{
+            advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
+            backgroundPanel.add(advertisingBanner, BorderLayout.WEST);
+        }
 
 
 
@@ -154,7 +164,7 @@ public class GameFrame extends JFrame{
         });
         MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg");
         optionsMenu.addActionListener(e -> {
-
+            OptionsMenu.showOptions();
         });
 
         menuButtonPanel.add(numberGame);
@@ -163,7 +173,6 @@ public class GameFrame extends JFrame{
         menuButtonPanel.add(optionsMenu);
 
         backgroundPanel.add(menuButtonPanel, BorderLayout.SOUTH);
-
 
         this.setVisible(true);
     }
@@ -205,20 +214,6 @@ public class GameFrame extends JFrame{
         miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
         this.revalidate();
-    }
-
-    public void manualShuffleTiles(){
-
-        for (int i = 0; i < 200; i++) {
-            Random randomGenerator = new Random();
-            int randomIndex = randomGenerator.nextInt(PuzzleBoard.tiles.size());
-            for (int j = 0; j < PuzzleBoard.tiles.size(); j++) {
-                if(j == randomIndex){
-                    Tile randomTile = PuzzleBoard.tiles.get(randomIndex);
-                    randomTile.doClick();
-                }
-            }
-        }
     }
 
     private void automaticallySwapTilesRandomly() {
