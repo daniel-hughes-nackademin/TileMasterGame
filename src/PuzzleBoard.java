@@ -14,7 +14,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
     protected String imagePath;
     private int width = 500, height = 500;
 
-    public PuzzleBoard (int gridSize){
+    public PuzzleBoard(int gridSize) {
 
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);
@@ -29,39 +29,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
     }
 
 
-    public PuzzleBoard(String imagePath, int gridSize) { //Creates a puzzle board with shuffled image pieces
-        tiles.clear();
-        this.imagePath = imagePath;
-        BufferedImage originalImage = ImageTool.loadResizedImage(imagePath, width, height);
-        Dimension size = new Dimension(width, height);
-        setPreferredSize(size);
-        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED), BorderFactory.createEtchedBorder(Color.DARK_GRAY, Color.BLACK)));
-
-        setLayout(new GridLayout(gridSize, gridSize));
-
-        final int totalNrOfTiles = gridSize * gridSize;
-
-        for (int i = 0; i < totalNrOfTiles - 1; i++) {
-                Tile tile = new Tile(gridSize, i, originalImage);
-                tile.addActionListener(this);
-                tiles.add(tile);
-        }
-
-        Collections.shuffle(tiles);
-
-        Tile blackTile = new Tile(gridSize, totalNrOfTiles - 1, originalImage);
-        blackTile.setEnabled(false);
-        blackTile.addActionListener(this);
-        tiles.add(blackTile);
-
-        for (int i = 0; i < tiles.size(); i++) {
-            tiles.get(i).setXandY(i, gridSize);
-            this.add(tiles.get(i));
-        }
-
-    }
-
-    public PuzzleBoard(String imagePath, int gridSize, boolean numberGame) { //Creates a puzzle board with toggle boolean for shuffle
+    public PuzzleBoard(String imagePath, int gridSize) { //Creates a puzzle board with image pieces
         tiles.clear();
         this.imagePath = imagePath;
         BufferedImage originalImage = ImageTool.loadResizedImage(imagePath, width, height);
@@ -79,9 +47,6 @@ public class PuzzleBoard extends JPanel implements ActionListener {
             tiles.add(tile);
         }
 
-        if (numberGame == true)
-            Collections.shuffle(tiles);
-
         Tile blackTile = new Tile(gridSize, totalNrOfTiles - 1, originalImage);
         blackTile.setEnabled(false);
         blackTile.addActionListener(this);
@@ -94,7 +59,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
 
     }
 
-    public PuzzleBoard(ImageIcon icon, int gridSize) { //Creates a puzzle board with shuffled number tiles
+    public PuzzleBoard(ImageIcon icon, int gridSize) { //Creates a puzzle board with number tiles
         tiles.clear();
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);
@@ -110,8 +75,6 @@ public class PuzzleBoard extends JPanel implements ActionListener {
             tiles.add(numberTile);
         }
 
-        Collections.shuffle(tiles);
-
         NumberTile blackTile = new NumberTile(gridSize, totalNrOfTiles - 1, icon);
         blackTile.setEnabled(false);
         blackTile.addActionListener(this);
@@ -124,87 +87,91 @@ public class PuzzleBoard extends JPanel implements ActionListener {
     }
 
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        List<Tile> tilesToRotate = new ArrayList<>();
-
-        int blackTileIndex = 0;
-        Tile blackTile = null;
-        for (int i = 0; i < tiles.size(); i++) {
-            if (tiles.get(i).icon == null) {
-                blackTile = tiles.get(i);
-                blackTileIndex = i;
-            }
-        }
 
         for (int nr = 0; nr < tiles.size(); nr++) {
             Tile selectedTile = tiles.get(nr);
             if (e.getSource() == selectedTile) {
                 int selectedIndex = nr;
-                if (selectedTile.x == blackTile.x && selectedTile.y < blackTile.y) {
 
-                    for (int i = selectedIndex; i <= blackTileIndex; i+=Game.gameFrame.gridSize) {
-                        tilesToRotate.add(tiles.get(i));
-                    }
-                    Collections.rotate(tilesToRotate, 1);
-
-                    int rotateIndex = 0;
-                    for (int i = selectedIndex; i <= blackTileIndex; i+=Game.gameFrame.gridSize) {
-                        tiles.set(i, tilesToRotate.get(rotateIndex));
-                        rotateIndex++;
-                    }
-
-                } else if (selectedTile.x == blackTile.x && selectedTile.y > blackTile.y) { ;
-
-                    for (int i = blackTileIndex; i <= selectedIndex; i+=Game.gameFrame.gridSize) {
-                        tilesToRotate.add(tiles.get(i));
-                    }
-                    Collections.rotate(tilesToRotate, -1);
-
-                    int rotateIndex = 0;
-                    for (int i = blackTileIndex; i <= selectedIndex; i+=Game.gameFrame.gridSize) {
-                        tiles.set(i, tilesToRotate.get(rotateIndex));
-                        rotateIndex++;
-                    }
-
-
-                } else if (selectedTile.y == blackTile.y && selectedTile.x < blackTile.x) {
-
-                    for (int i = selectedIndex; i <= blackTileIndex; i++) {
-                        tilesToRotate.add(tiles.get(i));
-                    }
-                    Collections.rotate(tilesToRotate, 1);
-
-                    int rotateIndex = 0;
-                    for (int i = selectedIndex; i <= blackTileIndex; i++) {
-                        tiles.set(i, tilesToRotate.get(rotateIndex));
-                        rotateIndex++;
-                    }
-
-
-
-                } else if (selectedTile.y == blackTile.y && selectedTile.x > blackTile.x) {
-
-                    for (int i = blackTileIndex; i <= selectedIndex; i++) {
-                        tilesToRotate.add(tiles.get(i));
-                    }
-                    Collections.rotate(tilesToRotate, -1);
-
-                    int rotateIndex = 0;
-                    for (int i = blackTileIndex; i <= selectedIndex; i++) {
-                        tiles.set(i, tilesToRotate.get(rotateIndex));
-                        rotateIndex++;
-                    }
-                } else {
-                    return;
-                }
+                swapTiles(selectedTile, selectedIndex);
 
                 Game.gameFrame.refreshPuzzleBoard();
 
                 checkWinCondition();
+                break;
+            }
+        }
+    }
+
+    void swapTiles(Tile selectedTile, int selectedIndex) {
+        List<Tile> tilesToRotate = new ArrayList<>();
+
+        int blackTileIndex = 0;
+        Tile blackTile = new Tile();
+        for (int i = 0; i < tiles.size(); i++) {
+            if (tiles.get(i).icon == null) {
+                blackTile = tiles.get(i);
+                blackTileIndex = i;
+                break;
+            }
+        }
+
+        if (selectedTile.x == blackTile.x && selectedTile.y < blackTile.y) {
+            System.out.println(blackTileIndex + " " + selectedIndex);
+            System.out.println(Game.gameFrame.gridSize);
+
+            for (int i = selectedIndex; i <= blackTileIndex; i += Game.gameFrame.gridSize) {
+                tilesToRotate.add(tiles.get(i));
+            }
+            Collections.rotate(tilesToRotate, 1);
+
+            int rotateIndex = 0;
+            for (int i = selectedIndex; i <= blackTileIndex; i += Game.gameFrame.gridSize) {
+                tiles.set(i, tilesToRotate.get(rotateIndex));
+                rotateIndex++;
             }
 
+        } else if (selectedTile.x == blackTile.x && selectedTile.y > blackTile.y) {
+
+            for (int i = blackTileIndex; i <= selectedIndex; i += Game.gameFrame.gridSize) {
+                tilesToRotate.add(tiles.get(i));
+            }
+            Collections.rotate(tilesToRotate, -1);
+
+            int rotateIndex = 0;
+            for (int i = blackTileIndex; i <= selectedIndex; i += Game.gameFrame.gridSize) {
+                tiles.set(i, tilesToRotate.get(rotateIndex));
+                rotateIndex++;
+            }
+
+        } else if (selectedTile.y == blackTile.y && selectedTile.x < blackTile.x) {
+
+            for (int i = selectedIndex; i <= blackTileIndex; i++) {
+                tilesToRotate.add(tiles.get(i));
+            }
+            Collections.rotate(tilesToRotate, 1);
+
+            int rotateIndex = 0;
+            for (int i = selectedIndex; i <= blackTileIndex; i++) {
+                tiles.set(i, tilesToRotate.get(rotateIndex));
+                rotateIndex++;
+            }
+        } else if (selectedTile.y == blackTile.y && selectedTile.x > blackTile.x) {
+
+            for (int i = blackTileIndex; i <= selectedIndex; i++) {
+                tilesToRotate.add(tiles.get(i));
+            }
+            Collections.rotate(tilesToRotate, -1);
+
+            int rotateIndex = 0;
+            for (int i = blackTileIndex; i <= selectedIndex; i++) {
+                tiles.set(i, tilesToRotate.get(rotateIndex));
+                rotateIndex++;
+            }
+        } else {
+            return; //Illegal Move - do nothing
         }
     }
 
@@ -214,13 +181,12 @@ public class PuzzleBoard extends JPanel implements ActionListener {
                 return;
         }
 
-        if(Game.gameFrame.isImageGame){
+        if (Game.gameFrame.isImageGame) {
             Game.gameFrame.removeCenterComponent();
             System.out.println("We got here");
             Game.gameFrame.backgroundPanel.add(new ImagePanel(Game.gameFrame.imagePath, 500, 500), BorderLayout.CENTER);
             Game.gameFrame.revalidate();
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(Game.gameFrame, "Congratulations!", "Tile Master - Victory", JOptionPane.PLAIN_MESSAGE);
             for (Tile tile : tiles) {
                 tile.setEnabled(false);

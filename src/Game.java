@@ -5,6 +5,7 @@ public class Game {
     //= = = = = = = = = = = = = = =MAIN METHOD = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
     public static void main(String[] args) {
        gameFrame = new GameFrame();
+       gameFrame.initializeMainMenu();
     }
     //= = = = = = = = = = = = = = =MAIN METHOD END = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 }

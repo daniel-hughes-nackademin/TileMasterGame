@@ -1,13 +1,9 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -19,7 +15,7 @@ public class GameFrame extends JFrame{
     int height = 800; //Calculating height by desired ratio
     JLabel showSizeLabel;
     JSlider sizeSlider;
-    protected int gridSize = 4;
+    int gridSize = 4;
     PuzzleBoard puzzleBoard;
     JPanel backgroundPanel;
     JPanel eastComponentPanel;
@@ -35,8 +31,6 @@ public class GameFrame extends JFrame{
         this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        initializeMainMenu();
-
     }
 
 
@@ -127,11 +121,6 @@ public class GameFrame extends JFrame{
 
 
 
-        //=====================Making and Adding Puzzle Board===========================================================
-
-        puzzleBoard = new PuzzleBoard(imagePath, gridSize);
-
-        backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
 
         //=====================Making and Adding Right Side Panel===========================================================
         eastComponentPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 500);
@@ -144,6 +133,10 @@ public class GameFrame extends JFrame{
 
         //Add Timer/move counter panel and facial expressions below mini picture, add advertising banner
 
+        //=====================Making and Adding Puzzle Board===========================================================
+        puzzleBoard = new PuzzleBoard(imagePath, gridSize);
+        automaticallySwapTilesRandomly();
+        backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
 
         //=====================================Making bottom menu panels===============================================
         ImagePanel menuButtonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 85);
@@ -188,13 +181,13 @@ public class GameFrame extends JFrame{
         isImageGame = true;
         removeCenterComponent();
         puzzleBoard = new PuzzleBoard(imagePath, gridSize);
+        automaticallySwapTilesRandomly();
         backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
 
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel(imagePath, 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
         this.revalidate();
-        //manualShuffleTiles();
     }
 
 
@@ -205,18 +198,18 @@ public class GameFrame extends JFrame{
         ImageIcon icon = ImageTool.makeScaledImageIcon("Graphics/Number Button.jpg", iconWidth, iconWidth);
         backgroundPanel.remove(puzzleBoard);
         puzzleBoard = new PuzzleBoard(icon, gridSize);
+        automaticallySwapTilesRandomly();
         backgroundPanel.add(puzzleBoard);
 
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
         this.revalidate();
-        //manualShuffleTiles();
     }
 
     public void manualShuffleTiles(){
 
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 200; i++) {
             Random randomGenerator = new Random();
             int randomIndex = randomGenerator.nextInt(PuzzleBoard.tiles.size());
             for (int j = 0; j < PuzzleBoard.tiles.size(); j++) {
@@ -226,7 +219,16 @@ public class GameFrame extends JFrame{
                 }
             }
         }
+    }
 
+    private void automaticallySwapTilesRandomly() {
+        Random random = new Random();
+        for (int i = 0; i < 500; i++) {
+            int randomIndex = random.nextInt(PuzzleBoard.tiles.size());
+                puzzleBoard.swapTiles(PuzzleBoard.tiles.get(randomIndex), randomIndex);
+                System.out.println(PuzzleBoard.tiles.get(randomIndex));
+                puzzleBoard = new PuzzleBoard(gridSize);
+        }
     }
 
     protected void removeCenterComponent() {
