@@ -1,11 +1,11 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class GameFrame extends JFrame{
@@ -16,6 +16,7 @@ public class GameFrame extends JFrame{
     int gridSize = 4;
     int moveCount = 0;
     JLabel moveCountLabel;
+    JLabel timeLabel;
 
 
     JLabel showSizeLabel;
@@ -30,6 +31,9 @@ public class GameFrame extends JFrame{
     boolean isImageGame = true;
     AdvertisingManager advertisingManager = new AdvertisingManager();
     boolean isShowingAdvertising = true;
+
+    Timer chronometer;
+    int seconds, minutes, hours;
 
     public GameFrame(){
         this.setResizable(false);
@@ -144,11 +148,35 @@ public class GameFrame extends JFrame{
         eastComponentPanel.setLayout(new BorderLayout());
 
         miniPicture = new ImagePanel(imagePath, 250, 250);
-        ImagePanel moveCountAndTimerPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 250);
+        ImagePanel moveCountAndTimerPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 240);
+        moveCountAndTimerPanel.setLayout(new GridLayout(2,1));
 
+        timeLabel = new JLabel("Time: " + minutes + " : " + seconds);
+        if (hours > 0)
+            timeLabel.setText("Time: " + hours + " : " + minutes + " : " + seconds);
+
+        chronometer = new Timer(1000, e -> {
+            seconds ++;
+            if(seconds == 60){
+                seconds = 0;
+                minutes ++;
+                if(minutes == 60){
+                    minutes = 0;
+                    hours ++;
+                }
+            }
+            timeLabel.setText("Time: " + minutes + " : " + seconds);
+            if (hours > 0)
+                timeLabel.setText("Time: " + hours + " : " + minutes + " : " + seconds);
+
+        });
 
         moveCountLabel = new JLabel("Moves Made: " + moveCount);
+
+        moveCountAndTimerPanel.add(timeLabel);
         moveCountAndTimerPanel.add(moveCountLabel);
+
+
 
 
 
@@ -192,7 +220,10 @@ public class GameFrame extends JFrame{
 
         backgroundPanel.add(menuButtonPanel, BorderLayout.SOUTH);
 
+        chronometer.start();
+
         this.setVisible(true);
+
     }
 
     void resetMoveCounter() {
