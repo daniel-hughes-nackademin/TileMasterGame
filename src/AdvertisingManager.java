@@ -8,10 +8,11 @@ public class AdvertisingManager implements Runnable {
     Thread advertisingThread;
 
     public AdvertisingManager() {
-        advertisingThread = new Thread(this);
+
     }
 
     public void showAdvertising() {
+        advertisingThread = new Thread(this);
         advertisingThread.start();
     }
 
