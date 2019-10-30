@@ -3,6 +3,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdvertisingManager implements Runnable {
     Thread advertisingThread;
@@ -31,6 +36,22 @@ public class AdvertisingManager implements Runnable {
 
     @Override
     public void run() {
+        showAdsFromWebAddressList();
+        //showAdsFromFileFolder();
+    }
+
+    private void showAdsFromWebAddressList() {
+        List<BufferedImage> webAdvertisingList = new ArrayList<>();
+        try {
+            BufferedImage img = ImageIO.read(new URL("https://www.shakeout.org/2008/downloads/ShakeOut_BannerAds_GetReady_160x600_v8.gif"));
+            webAdvertisingList.add(img);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showAdsFromFileFolder(){
         File folder = new File("src/AdvertisingImages");
         File[] folderFileArray = folder.listFiles();
         int i = 0;
@@ -62,6 +83,5 @@ public class AdvertisingManager implements Runnable {
                 e.printStackTrace();
             }
         }
-
     }
 }

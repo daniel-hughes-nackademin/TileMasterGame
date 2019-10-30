@@ -16,6 +16,8 @@ public class ImagePanel extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED), BorderFactory.createEtchedBorder(Color.DARK_GRAY, Color.BLACK)));
     }
 
+    //MAKE NEW CONSTRUCTOR THAT TAKES AN IMAGE DIRECTLY
+
 
     @Override
 public void paintComponent(Graphics g){
