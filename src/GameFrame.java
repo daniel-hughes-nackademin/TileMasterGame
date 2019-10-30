@@ -27,6 +27,7 @@ public class GameFrame extends JFrame{
     JPanel eastComponentPanel;
     ImagePanel miniPicture;
 
+    File lastDirectory = new File (System.getProperty("user.home") + System.getProperty("file.separator")+ "Pictures");
     String imagePath = "Graphics/Military Anime Girl.jpg";
     boolean isImageGame = true;
 
@@ -332,6 +333,7 @@ public class GameFrame extends JFrame{
         boolean isCorrectFile = false;
 
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(lastDirectory);
         int choice = fileChooser.showDialog(Game.gameFrame, "New Game");
 
         if (choice == JFileChooser.APPROVE_OPTION){
@@ -341,9 +343,11 @@ public class GameFrame extends JFrame{
                 FileInputStream inputStream = new FileInputStream(chosenFile);
                 if(ImageIO.read(inputStream) == null){
                     JOptionPane.showMessageDialog(Game.gameFrame, "The chosen file must be an image file", "Tile Master - Incorrect File Type", JOptionPane.INFORMATION_MESSAGE);
+                    chooseCustomFile();
                     return isCorrectFile;
                 }
                 isCorrectFile = true;
+                lastDirectory = new File(chosenFile.getParent());
 
                 String filePath = chosenFile.getPath();
                 this.imagePath = filePath.replace('\\', '/');
