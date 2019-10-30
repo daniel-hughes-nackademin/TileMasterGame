@@ -35,6 +35,7 @@ public class GameFrame extends JFrame{
 
     Timer chronometer;
     int seconds, minutes, hours;
+    MenuButton timerPauseButton;
 
     public GameFrame(){
         this.setResizable(false);
@@ -60,7 +61,7 @@ public class GameFrame extends JFrame{
 
         ImagePanel headerPanel = new ImagePanel("Graphics/Fire Background.jpg", this.width, 100);
         headerPanel.setLayout(new GridBagLayout());
-        headerPanel.add(titleLabel, new GridBagConstraints()); //Centers the component
+        headerPanel.add(titleLabel, new GridBagConstraints()); //Centers Label
 
 
         //=====================================Making top panels======================================================
@@ -69,8 +70,28 @@ public class GameFrame extends JFrame{
         ImagePanel topButtonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 80);
         topButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        MenuButton timerPlayButton = new MenuButton("Start Timer", "Graphics/Metallic Button.jpg");
-        timerPlayButton.addActionListener(e -> {});
+        timerPauseButton = new MenuButton("Pause", "Graphics/Metallic Button.jpg");
+        timerPauseButton.addActionListener(e -> {
+            if (timerPauseButton.getText() == "Pause") {
+                chronometer.stop();
+                timerPauseButton.setText("Resume");
+
+                removeCenterComponent();
+                JLabel pauseLabel = new JLabel("PAUSED");
+                pauseLabel.setFont(new Font("Georgia", Font.BOLD, 60));
+                pauseLabel.setForeground(Color.WHITE);
+
+                JPanel pausePanel = new JPanel(new GridBagLayout());
+                pausePanel.setBackground(Color.BLACK);
+                pausePanel.add(pauseLabel, new GridBagConstraints()); //Centers Label
+                backgroundPanel.add(pausePanel, BorderLayout.CENTER);
+
+            } else {
+                chronometer.start();
+                timerPauseButton.setText("Pause");
+                refreshPuzzleBoard();
+            }
+        });
         MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");
         shuffleButton.addActionListener(e -> {
             if(isImageGame)
@@ -115,7 +136,7 @@ public class GameFrame extends JFrame{
 
 
         //=====================================Adding top components to panel======================================================
-        topButtonPanel.add(timerPlayButton);
+        topButtonPanel.add(timerPauseButton);
         topButtonPanel.add(shuffleButton);
         topButtonPanel.add(new JLabel("                              "));
         topButtonPanel.add(scalingPanel);
@@ -155,6 +176,8 @@ public class GameFrame extends JFrame{
         moveCountAndTimerPanel.setLayout(new GridLayout(2,1));
 
         timeLabel = new JLabel("Time: " + minutes + " : " + seconds);
+        timeLabel.setFont(georgia);
+        timeLabel.setHorizontalAlignment(JLabel.CENTER);
         if (hours > 0)
             timeLabel.setText("Time: " + hours + " : " + minutes + " : " + seconds);
 
@@ -171,8 +194,8 @@ public class GameFrame extends JFrame{
             timeLabel.setText("Time: " + minutes + " : " + seconds);
             if (hours > 0)
                 timeLabel.setText("Time: " + hours + " : " + minutes + " : " + seconds);
-
         });
+        moveCountAndTimerPanel.add(timeLabel);
 
         moveCountLabel = new JLabel("Moves: " + moveCount);
         moveCountLabel.setFont(georgia);
@@ -242,6 +265,8 @@ public class GameFrame extends JFrame{
 
 
     public void startNewPictureGame(){
+        resetTimer();
+
         isImageGame = true;
         removeCenterComponent();
         puzzleBoard = new PuzzleBoard(imagePath, gridSize);
@@ -257,6 +282,8 @@ public class GameFrame extends JFrame{
 
 
     public void startNewNumberGame(){
+        resetTimer();
+
         isImageGame = false;
         removeCenterComponent();
         int iconWidth = puzzleBoard.getWidth()/gridSize;
@@ -285,6 +312,17 @@ public class GameFrame extends JFrame{
     protected void removeCenterComponent() {
         BorderLayout layout = (BorderLayout)backgroundPanel.getLayout();
         backgroundPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
+    }
+
+    public void resetTimer(){
+        seconds = 0;
+        minutes = 0;
+        hours = 0;
+        timeLabel.setText("Time: " + minutes + " : " + seconds);
+
+        chronometer.stop();
+        chronometer.start();
+        timerPauseButton.setText("Pause");
     }
 
     public boolean chooseCustomFile(){
