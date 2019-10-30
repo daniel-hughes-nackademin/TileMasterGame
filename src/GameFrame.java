@@ -83,10 +83,12 @@ public class GameFrame extends JFrame{
                 pausePanel.add(pauseLabel, new GridBagConstraints()); //Centers Label
                 backgroundPanel.add(pausePanel, BorderLayout.CENTER);
 
-            } else {
+            }
+            else{
                 chronometer.start();
                 timerPauseButton.setText("Pause");
                 refreshPuzzleBoard();
+                puzzleBoard.checkWinCondition();
             }
         });
         MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");

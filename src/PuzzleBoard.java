@@ -176,7 +176,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
         Game.gameFrame.moveCountLabel.setText("Moves: " + Game.gameFrame.moveCount);
     }
 
-    private void checkWinCondition() {
+    public void checkWinCondition() {
         for (int i = 0; i < tiles.size(); i++) {
             if (tiles.get(i).correctOrderIndex != i)
                 return;
