@@ -9,7 +9,7 @@ public class GameOverGirl implements Runnable {
     Thread gameOverThread;
     ImagePanel gameFacesPanel;
     boolean isVictory;
-    int phaseDelay;
+
 
 
     public GameOverGirl(boolean isVictory) {
@@ -74,10 +74,9 @@ public class GameOverGirl implements Runnable {
 
     private void showGameFaces(File[] folderFileArray) {
         int totalSeconds = Game.gameFrame.seconds + Game.gameFrame.minutes * 60;
-        phaseDelay = 10;
         String faceExpressionFilePath;
         for (int i = 0; i < folderFileArray.length; i++) {
-            if (phaseDelay * i == totalSeconds) {
+            if (OptionsMenu.phaseDelay * i == totalSeconds) {
                 try {
                     ImageIO.read(folderFileArray[i]);
                     faceExpressionFilePath = folderFileArray[i].getPath().replace('\\', '/');
