@@ -21,7 +21,7 @@ public class ImageTool {
         return null;
     }
 
-    private static BufferedImage getResizedImage(BufferedImage picture, int width, int height){
+    public static BufferedImage getResizedImage(BufferedImage picture, int width, int height){
         BufferedImage resizedImage = new BufferedImage(width, height, picture.getType());
         Graphics2D g2d = resizedImage.createGraphics();
         g2d.drawImage(picture, 0, 0, width, height, null);

@@ -8,6 +8,9 @@ public class OptionsMenu{
     static boolean isActivatedGameOver = false;
 
     public static void showOptions(){
+        Game.gameFrame.chronometer.stop();
+        Game.gameFrame.timerPauseButton.setText("Resume");
+
         Game.gameFrame.removeCenterComponent();
         JPanel menuComponents = new JPanel(new BorderLayout());
 
