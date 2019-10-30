@@ -321,6 +321,14 @@ public class GameFrame extends JFrame{
     }
 
     public boolean chooseCustomFile(){
+        LookAndFeel originalLookAndFeel = UIManager.getLookAndFeel();
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         boolean isCorrectFile = false;
 
         JFileChooser fileChooser = new JFileChooser();
@@ -347,6 +355,11 @@ public class GameFrame extends JFrame{
 
         }
 
+        try{
+        UIManager.setLookAndFeel(originalLookAndFeel);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         return isCorrectFile;
     }

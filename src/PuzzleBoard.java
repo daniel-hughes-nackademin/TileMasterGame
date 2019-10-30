@@ -194,6 +194,5 @@ public class PuzzleBoard extends JPanel implements ActionListener {
                 tile.setEnabled(false);
             }
         }
-
     }
 }
