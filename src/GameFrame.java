@@ -29,9 +29,6 @@ public class GameFrame extends JFrame{
 
     String imagePath = "Graphics/Military Anime Girl.jpg";
     boolean isImageGame = true;
-    AdvertisingManager advertisingManager = new AdvertisingManager();
-    boolean isShowingAdvertising = true;
-    boolean isActivatedGameOver = false;
 
     Timer chronometer;
     int seconds, minutes, hours;
@@ -152,14 +149,10 @@ public class GameFrame extends JFrame{
 
 
         //=====================Making and Adding Advertising===========================================================
-        if (isShowingAdvertising){
             advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
             backgroundPanel.add(advertisingBanner, BorderLayout.WEST);
-            advertisingManager.showAdvertising();
-        }
-        else{
-            advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
-            backgroundPanel.add(advertisingBanner, BorderLayout.WEST);
+        if (OptionsMenu.isShowingAdvertising){
+            OptionsMenu.advertisingManager.showAdvertising();
         }
 
 

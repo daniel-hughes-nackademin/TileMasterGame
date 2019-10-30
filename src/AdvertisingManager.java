@@ -5,18 +5,23 @@ import java.io.File;
 import java.io.IOException;
 
 public class AdvertisingManager implements Runnable {
-    Thread advertisingThread = new Thread(this);
+    Thread advertisingThread;
 
-    public AdvertisingManager() {
-
-    }
-
-    public void showAdvertising() {
+    public synchronized void showAdvertising() {
+        OptionsMenu.isShowingAdvertising = true;
+        advertisingThread = new Thread(this);
         advertisingThread.start();
     }
 
-    public void stopAdvertising() {
-        advertisingThread.interrupt();
+    public synchronized void stopAdvertising() {
+        OptionsMenu.isShowingAdvertising = false;
+        try {
+            advertisingThread.interrupt();
+            advertisingThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         BorderLayout layout = (BorderLayout)Game.gameFrame.backgroundPanel.getLayout();
         Game.gameFrame.backgroundPanel.remove(layout.getLayoutComponent(BorderLayout.WEST));
         Game.gameFrame.advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, Game.gameFrame.height - 260);
@@ -29,7 +34,7 @@ public class AdvertisingManager implements Runnable {
         File folder = new File("src/AdvertisingImages");
         File[] folderFileArray = folder.listFiles();
         int i = 0;
-        while (!Thread.interrupted()) {
+        while (OptionsMenu.isShowingAdvertising) {
             String advertisingImagePath;
 
 
@@ -45,7 +50,6 @@ public class AdvertisingManager implements Runnable {
                 if (i == folderFileArray.length)
                     i = 0;
             }
-            System.out.println(advertisingImagePath);
             BorderLayout layout = (BorderLayout)Game.gameFrame.backgroundPanel.getLayout();
             Game.gameFrame.backgroundPanel.remove(layout.getLayoutComponent(BorderLayout.WEST));
             Game.gameFrame.advertisingBanner = new ImagePanel(advertisingImagePath, 150, 540);
@@ -53,7 +57,7 @@ public class AdvertisingManager implements Runnable {
             Game.gameFrame.backgroundPanel.revalidate();
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
