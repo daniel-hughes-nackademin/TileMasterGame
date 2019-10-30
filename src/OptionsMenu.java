@@ -4,8 +4,9 @@ import java.awt.*;
 public class OptionsMenu{
 
     static AdvertisingManager advertisingManager = new AdvertisingManager();
+    static GameOverGirl gameOverGirl = new GameOverGirl(false);
     static boolean isShowingAdvertising = true;
-    static boolean isActivatedGameOver = false;
+    static boolean isActivatedGameFaces = false;
 
     public static void showOptions(){
         Game.gameFrame.chronometer.stop();
@@ -23,7 +24,7 @@ public class OptionsMenu{
         gridOptionsPanel.setLayout(new GridLayout(4,1));
 
         ImagePanel buttonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", 100, 300);
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setLayout(new FlowLayout());
 
 
         //=====================================Options Labels==================================================
@@ -49,7 +50,7 @@ public class OptionsMenu{
         gridOptionsPanel.add(emptyLabel);
 
         //================================Options Buttons============================================================
-            MenuButton advertisingButton = new MenuButton("ON", "Graphics/Metallic Button.jpg", 70, 55);
+            MenuButton advertisingButton = new MenuButton("ON", "Graphics/Metallic Button.jpg", 80, 55);
             advertisingButton.setFont(new Font("Georgia", Font.BOLD, 14));
 
             if (!isShowingAdvertising){
@@ -69,21 +70,21 @@ public class OptionsMenu{
 
             buttonPanel.add(advertisingButton);
 
-            MenuButton gameOverOptionButton = new MenuButton("OFF", "Graphics/Metallic Button.jpg", 70, 55);
+            MenuButton gameOverOptionButton = new MenuButton("OFF", "Graphics/Metallic Button.jpg", 80, 55);
             gameOverOptionButton.setFont(new Font("Georgia", Font.BOLD, 14));
-            if (isActivatedGameOver){
+            if (isActivatedGameFaces){
                 gameOverOptionButton.setText("ON");
             }
             gameOverOptionButton.addActionListener(e -> {
-                if (isActivatedGameOver){
-                    isActivatedGameOver = false;
+                if (isActivatedGameFaces){
+                    isActivatedGameFaces = false;
                     gameOverOptionButton.setText("OFF");
-                    //Turn off Game Over Feature
+                    gameOverGirl.stopGameOverGirl();
                 }
                 else{
-                    isActivatedGameOver = true;
+                    isActivatedGameFaces = true;
                     gameOverOptionButton.setText("ON");
-                    //Turn on Game Over Feature
+                    gameOverGirl.showGameOverGirl();
                 }
             });
 

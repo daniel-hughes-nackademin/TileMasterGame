@@ -1,8 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,6 +23,7 @@ public class GameFrame extends JFrame{
     JPanel backgroundPanel;
     ImagePanel advertisingBanner;
     JPanel eastComponentPanel;
+    ImagePanel westComponentPanel;
     ImagePanel miniPicture;
 
     File lastDirectory = new File (System.getProperty("user.home") + System.getProperty("file.separator")+ "Pictures");
@@ -152,14 +151,18 @@ public class GameFrame extends JFrame{
 
 
         //=====================Making and Adding Advertising===========================================================
-            advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
-            backgroundPanel.add(advertisingBanner, BorderLayout.WEST);
+        westComponentPanel = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
+        westComponentPanel.setLayout(new BorderLayout());
+
+        if(OptionsMenu.isActivatedGameFaces){
+            OptionsMenu.gameOverGirl.showGameOverGirl();
+        }
+
         if (OptionsMenu.isShowingAdvertising){
             OptionsMenu.advertisingManager.showAdvertising();
         }
 
-
-
+        backgroundPanel.add(westComponentPanel, BorderLayout.WEST);
 
         //=====================Making and Adding Right Side Panel===========================================================
         Font georgia = new Font("Georgia", Font.BOLD, 24);
