@@ -77,15 +77,13 @@ public class OptionsMenu{
             }
             gameOverOptionButton.addActionListener(e -> {
                 if (isActivatedGameFaces){
-                    isActivatedGameFaces = false;
-                    gameOverOptionButton.setText("OFF");
                     gameOverGirl.stopGameOverGirl();
                 }
                 else{
-                    isActivatedGameFaces = true;
-                    gameOverOptionButton.setText("ON");
                     gameOverGirl.showGameOverGirl();
                 }
+
+                showOptions();
             });
 
             buttonPanel.add(gameOverOptionButton);

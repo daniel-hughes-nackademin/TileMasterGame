@@ -184,6 +184,12 @@ public class PuzzleBoard extends JPanel implements ActionListener {
 
         Game.gameFrame.chronometer.stop();
 
+        if (OptionsMenu.isActivatedGameFaces) {
+            OptionsMenu.gameOverGirl.stopGameOverGirl();
+            OptionsMenu.gameOverGirl = new GameOverGirl(true);
+            OptionsMenu.gameOverGirl.showGameOverGirl();
+        }
+
         if (Game.gameFrame.isImageGame) {
             Game.gameFrame.removeCenterComponent();
             Game.gameFrame.backgroundPanel.add(new ImagePanel(Game.gameFrame.imagePath, 500, 500), BorderLayout.CENTER);

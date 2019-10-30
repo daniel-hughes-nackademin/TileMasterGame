@@ -207,8 +207,8 @@ public class GameFrame extends JFrame{
         eastComponentPanel.add(moveCountAndTimerPanel, BorderLayout.SOUTH);
         backgroundPanel.add(eastComponentPanel, BorderLayout.EAST);
 
-
-        //Add Timer/move counter panel and facial expressions below mini picture, add advertising banner
+        if(OptionsMenu.isActivatedGameFaces)
+            OptionsMenu.gameOverGirl.showGameOverGirl();
 
         //=====================Making and Adding Puzzle Board===========================================================
         puzzleBoard = new PuzzleBoard(imagePath, gridSize);
@@ -275,6 +275,11 @@ public class GameFrame extends JFrame{
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel(imagePath, 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        if(OptionsMenu.isActivatedGameFaces){
+            OptionsMenu.gameOverGirl.stopGameOverGirl();
+            OptionsMenu.gameOverGirl = new GameOverGirl(false);
+            OptionsMenu.gameOverGirl.showGameOverGirl();
+        }
         Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
@@ -295,6 +300,11 @@ public class GameFrame extends JFrame{
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        if(OptionsMenu.isActivatedGameFaces){
+            OptionsMenu.gameOverGirl.stopGameOverGirl();
+            OptionsMenu.gameOverGirl = new GameOverGirl(false);
+            OptionsMenu.gameOverGirl.showGameOverGirl();
+        }
         Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
