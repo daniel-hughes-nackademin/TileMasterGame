@@ -1,30 +1,41 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class GameFrame extends JFrame{
 
     private static String title = "Tile Master - The Amazing Puzzle Game";
     int width = 900;
-    int height = 800; //Calculating height by desired ratio
+    int height = 800;
+    int gridSize = 4;
+    int moveCount = 0;
+    JLabel moveCountLabel;
+    JLabel timeLabel;
+
+
     JLabel showSizeLabel;
     JSlider sizeSlider;
-    int gridSize = 4;
     PuzzleBoard puzzleBoard;
     JPanel backgroundPanel;
     ImagePanel advertisingBanner;
     JPanel eastComponentPanel;
     ImagePanel miniPicture;
+
     String imagePath = "Graphics/Military Anime Girl.jpg";
     boolean isImageGame = true;
     AdvertisingManager advertisingManager = new AdvertisingManager();
     boolean isShowingAdvertising = true;
+    boolean isActivatedGameOver = false;
+
+    Timer chronometer;
+    int seconds, minutes, hours;
+    MenuButton timerPauseButton;
 
     public GameFrame(){
         this.setResizable(false);
@@ -50,7 +61,7 @@ public class GameFrame extends JFrame{
 
         ImagePanel headerPanel = new ImagePanel("Graphics/Fire Background.jpg", this.width, 100);
         headerPanel.setLayout(new GridBagLayout());
-        headerPanel.add(titleLabel, new GridBagConstraints()); //Centers the component
+        headerPanel.add(titleLabel, new GridBagConstraints()); //Centers Label
 
 
         //=====================================Making top panels======================================================
@@ -59,12 +70,34 @@ public class GameFrame extends JFrame{
         ImagePanel topButtonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 80);
         topButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        MenuButton timerPlayButton = new MenuButton("Start Timer", "Graphics/Metallic Button.jpg");
-        timerPlayButton.addActionListener(e -> {});
+        timerPauseButton = new MenuButton("Pause", "Graphics/Metallic Button.jpg");
+        timerPauseButton.addActionListener(e -> {
+            if (timerPauseButton.getText() == "Pause") {
+                chronometer.stop();
+                timerPauseButton.setText("Resume");
+
+                removeCenterComponent();
+                JLabel pauseLabel = new JLabel("PAUSED");
+                pauseLabel.setFont(new Font("Georgia", Font.BOLD, 60));
+                pauseLabel.setForeground(Color.WHITE);
+
+                JPanel pausePanel = new JPanel(new GridBagLayout());
+                pausePanel.setBackground(Color.BLACK);
+                pausePanel.add(pauseLabel, new GridBagConstraints()); //Centers Label
+                backgroundPanel.add(pausePanel, BorderLayout.CENTER);
+
+            } else {
+                chronometer.start();
+                timerPauseButton.setText("Pause");
+                refreshPuzzleBoard();
+            }
+        });
         MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");
         shuffleButton.addActionListener(e -> {
-            Collections.shuffle(PuzzleBoard.tiles);
-            refreshPuzzleBoard();
+            if(isImageGame)
+                startNewPictureGame();
+            else
+                startNewNumberGame();
         });
 
 
@@ -103,7 +136,7 @@ public class GameFrame extends JFrame{
 
 
         //=====================================Adding top components to panel======================================================
-        topButtonPanel.add(timerPlayButton);
+        topButtonPanel.add(timerPauseButton);
         topButtonPanel.add(shuffleButton);
         topButtonPanel.add(new JLabel("                              "));
         topButtonPanel.add(scalingPanel);
@@ -133,13 +166,48 @@ public class GameFrame extends JFrame{
 
 
         //=====================Making and Adding Right Side Panel===========================================================
+        Font georgia = new Font("Georgia", Font.BOLD, 24);
+
         eastComponentPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 500);
         eastComponentPanel.setLayout(new BorderLayout());
 
+        miniPicture = new ImagePanel(imagePath, 250, 250);
+        ImagePanel moveCountAndTimerPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 240);
+        moveCountAndTimerPanel.setLayout(new GridLayout(2,1));
+
+        timeLabel = new JLabel("Time: " + minutes + " : " + seconds);
+        timeLabel.setFont(georgia);
+        timeLabel.setHorizontalAlignment(JLabel.CENTER);
+        if (hours > 0)
+            timeLabel.setText("Time: " + hours + " : " + minutes + " : " + seconds);
+
+        chronometer = new Timer(1000, e -> {
+            seconds ++;
+            if(seconds == 60){
+                seconds = 0;
+                minutes ++;
+                if(minutes == 60){
+                    minutes = 0;
+                    hours ++;
+                }
+            }
+            timeLabel.setText("Time: " + minutes + " : " + seconds);
+            if (hours > 0)
+                timeLabel.setText("Time: " + hours + " : " + minutes + " : " + seconds);
+        });
+        moveCountAndTimerPanel.add(timeLabel);
+
+        moveCountLabel = new JLabel("Moves: " + moveCount);
+        moveCountLabel.setFont(georgia);
+        moveCountLabel.setHorizontalAlignment(JLabel.CENTER);
+        moveCountAndTimerPanel.add(moveCountLabel);
+
+
+
+        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        eastComponentPanel.add(moveCountAndTimerPanel, BorderLayout.SOUTH);
         backgroundPanel.add(eastComponentPanel, BorderLayout.EAST);
 
-        miniPicture = new ImagePanel(imagePath, 250, 250);
-        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
 
         //Add Timer/move counter panel and facial expressions below mini picture, add advertising banner
 
@@ -147,6 +215,8 @@ public class GameFrame extends JFrame{
         puzzleBoard = new PuzzleBoard(imagePath, gridSize);
         automaticallySwapTilesRandomly();
         backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
+
+        resetMoveCounter();
 
         //=====================================Making bottom menu panels===============================================
         ImagePanel menuButtonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", this.width, 85);
@@ -174,7 +244,15 @@ public class GameFrame extends JFrame{
 
         backgroundPanel.add(menuButtonPanel, BorderLayout.SOUTH);
 
+        chronometer.start();
+
         this.setVisible(true);
+
+    }
+
+    void resetMoveCounter() {
+        moveCount = 0;
+        moveCountLabel.setText("Moves: " + moveCount);
     }
 
 
@@ -187,6 +265,8 @@ public class GameFrame extends JFrame{
 
 
     public void startNewPictureGame(){
+        resetTimer();
+
         isImageGame = true;
         removeCenterComponent();
         puzzleBoard = new PuzzleBoard(imagePath, gridSize);
@@ -196,16 +276,19 @@ public class GameFrame extends JFrame{
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel(imagePath, 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
 
 
     public void startNewNumberGame(){
+        resetTimer();
+
         isImageGame = false;
+        removeCenterComponent();
         int iconWidth = puzzleBoard.getWidth()/gridSize;
 
         ImageIcon icon = ImageTool.makeScaledImageIcon("Graphics/Number Button.jpg", iconWidth, iconWidth);
-        backgroundPanel.remove(puzzleBoard);
         puzzleBoard = new PuzzleBoard(icon, gridSize);
         automaticallySwapTilesRandomly();
         backgroundPanel.add(puzzleBoard);
@@ -213,6 +296,7 @@ public class GameFrame extends JFrame{
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
 
@@ -228,6 +312,17 @@ public class GameFrame extends JFrame{
     protected void removeCenterComponent() {
         BorderLayout layout = (BorderLayout)backgroundPanel.getLayout();
         backgroundPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
+    }
+
+    public void resetTimer(){
+        seconds = 0;
+        minutes = 0;
+        hours = 0;
+        timeLabel.setText("Time: " + minutes + " : " + seconds);
+
+        chronometer.stop();
+        chronometer.start();
+        timerPauseButton.setText("Pause");
     }
 
     public boolean chooseCustomFile(){
