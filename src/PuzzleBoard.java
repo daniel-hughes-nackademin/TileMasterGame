@@ -176,10 +176,18 @@ public class PuzzleBoard extends JPanel implements ActionListener {
         Game.gameFrame.moveCountLabel.setText("Moves: " + Game.gameFrame.moveCount);
     }
 
-    private void checkWinCondition() {
+    public void checkWinCondition() {
         for (int i = 0; i < tiles.size(); i++) {
             if (tiles.get(i).correctOrderIndex != i)
                 return;
+        }
+
+        Game.gameFrame.chronometer.stop();
+
+        if (OptionsMenu.isActivatedGameOverMode) {
+            OptionsMenu.gameOverGirl.stopGameOverGirl();
+            OptionsMenu.gameOverGirl = new GameOverGirl(true);
+            OptionsMenu.gameOverGirl.showGameOverGirl();
         }
 
         if (Game.gameFrame.isImageGame) {
@@ -192,6 +200,5 @@ public class PuzzleBoard extends JPanel implements ActionListener {
                 tile.setEnabled(false);
             }
         }
-
     }
 }

@@ -1,14 +1,12 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Random;
 
-public class GameFrame extends JFrame{
+public class GameFrame extends JFrame {
 
     private static String title = "Tile Master - The Amazing Puzzle Game";
     int width = 900;
@@ -25,19 +23,18 @@ public class GameFrame extends JFrame{
     JPanel backgroundPanel;
     ImagePanel advertisingBanner;
     JPanel eastComponentPanel;
+    ImagePanel westComponentPanel;
     ImagePanel miniPicture;
 
+    File lastDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Pictures");
     String imagePath = "Graphics/Military Anime Girl.jpg";
     boolean isImageGame = true;
-    AdvertisingManager advertisingManager = new AdvertisingManager();
-    boolean isShowingAdvertising = true;
-    boolean isActivatedGameOver = false;
 
     Timer chronometer;
     int seconds, minutes, hours;
     MenuButton timerPauseButton;
 
-    public GameFrame(){
+    public GameFrame() {
         this.setResizable(false);
         Dimension size = new Dimension(width, height);
         this.setTitle(title);
@@ -48,8 +45,7 @@ public class GameFrame extends JFrame{
     }
 
 
-
-    public void initializeMainMenu(){
+    public void initializeMainMenu() {
         //=====================================Adding the background panel=============================================
         backgroundPanel = new JPanel(new BorderLayout());
         this.add(backgroundPanel);
@@ -87,14 +83,18 @@ public class GameFrame extends JFrame{
                 backgroundPanel.add(pausePanel, BorderLayout.CENTER);
 
             } else {
-                chronometer.start();
+                if(!(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver)){
+                    chronometer.start();
+                }
                 timerPauseButton.setText("Pause");
                 refreshPuzzleBoard();
+                puzzleBoard.checkWinCondition();
             }
         });
+
         MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");
         shuffleButton.addActionListener(e -> {
-            if(isImageGame)
+            if (isImageGame)
                 startNewPictureGame();
             else
                 startNewNumberGame();
@@ -114,7 +114,7 @@ public class GameFrame extends JFrame{
         chooseSizeLabel.setForeground(Color.WHITE);
         scalingPanel.add(chooseSizeLabel);
 
-        sizeSlider = new JSlider(JSlider.HORIZONTAL, 3,7, gridSize);
+        sizeSlider = new JSlider(JSlider.HORIZONTAL, 3, 7, gridSize);
         sizeSlider.setPreferredSize(new Dimension(150, 30));
         sizeSlider.setMinorTickSpacing(1);
         sizeSlider.setPaintTicks(true);
@@ -122,7 +122,7 @@ public class GameFrame extends JFrame{
             showSizeLabel.setText("  " + sizeSlider.getValue());
             gridSize = sizeSlider.getValue();
 
-            if(isImageGame)
+            if (isImageGame)
                 startNewPictureGame();
             else
                 startNewNumberGame();
@@ -142,8 +142,6 @@ public class GameFrame extends JFrame{
         topButtonPanel.add(scalingPanel);
 
 
-
-
         //=====================Adding top panel components to background panel======================================
         topComponentPanel.add(topButtonPanel, BorderLayout.NORTH);
         topComponentPanel.add(headerPanel, BorderLayout.SOUTH);
@@ -152,18 +150,18 @@ public class GameFrame extends JFrame{
 
 
         //=====================Making and Adding Advertising===========================================================
-        if (isShowingAdvertising){
-            advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
-            backgroundPanel.add(advertisingBanner, BorderLayout.WEST);
-            advertisingManager.showAdvertising();
-        }
-        else{
-            advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
-            backgroundPanel.add(advertisingBanner, BorderLayout.WEST);
+        westComponentPanel = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
+        westComponentPanel.setLayout(new BorderLayout());
+
+        if (OptionsMenu.isActivatedGameOverMode) {
+            OptionsMenu.gameOverGirl.showGameOverGirl();
         }
 
+        if (OptionsMenu.isShowingAdvertising) {
+            OptionsMenu.advertisingManager.showAdvertising();
+        }
 
-
+        backgroundPanel.add(westComponentPanel, BorderLayout.WEST);
 
         //=====================Making and Adding Right Side Panel===========================================================
         Font georgia = new Font("Georgia", Font.BOLD, 24);
@@ -173,7 +171,7 @@ public class GameFrame extends JFrame{
 
         miniPicture = new ImagePanel(imagePath, 250, 250);
         ImagePanel moveCountAndTimerPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 250, 240);
-        moveCountAndTimerPanel.setLayout(new GridLayout(2,1));
+        moveCountAndTimerPanel.setLayout(new GridLayout(2, 1));
 
         timeLabel = new JLabel("Time: " + minutes + " : " + seconds);
         timeLabel.setFont(georgia);
@@ -182,13 +180,13 @@ public class GameFrame extends JFrame{
             timeLabel.setText("Time: " + hours + " : " + minutes + " : " + seconds);
 
         chronometer = new Timer(1000, e -> {
-            seconds ++;
-            if(seconds == 60){
+            seconds++;
+            if (seconds == 60) {
                 seconds = 0;
-                minutes ++;
-                if(minutes == 60){
+                minutes++;
+                if (minutes == 60) {
                     minutes = 0;
-                    hours ++;
+                    hours++;
                 }
             }
             timeLabel.setText("Time: " + minutes + " : " + seconds);
@@ -203,13 +201,12 @@ public class GameFrame extends JFrame{
         moveCountAndTimerPanel.add(moveCountLabel);
 
 
-
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
         eastComponentPanel.add(moveCountAndTimerPanel, BorderLayout.SOUTH);
         backgroundPanel.add(eastComponentPanel, BorderLayout.EAST);
 
-
-        //Add Timer/move counter panel and facial expressions below mini picture, add advertising banner
+        if (OptionsMenu.isActivatedGameOverMode)
+            OptionsMenu.gameOverGirl.showGameOverGirl();
 
         //=====================Making and Adding Puzzle Board===========================================================
         puzzleBoard = new PuzzleBoard(imagePath, gridSize);
@@ -229,8 +226,7 @@ public class GameFrame extends JFrame{
         pictureGame.addActionListener(e -> startNewPictureGame());
         MenuButton customPictureGame = new MenuButton("Choose Picture", "Graphics/Metallic Button.jpg");
         customPictureGame.addActionListener(e -> {
-            if(chooseCustomFile())
-            startNewPictureGame();
+            chooseCustomFile();
         });
         MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg");
         optionsMenu.addActionListener(e -> {
@@ -264,7 +260,7 @@ public class GameFrame extends JFrame{
     }
 
 
-    public void startNewPictureGame(){
+    public void startNewPictureGame() {
         resetTimer();
 
         isImageGame = true;
@@ -276,17 +272,22 @@ public class GameFrame extends JFrame{
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel(imagePath, 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        if (OptionsMenu.isActivatedGameOverMode) {
+            OptionsMenu.gameOverGirl.stopGameOverGirl();
+            OptionsMenu.gameOverGirl = new GameOverGirl(false);
+            OptionsMenu.gameOverGirl.showGameOverGirl();
+        }
         Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
 
 
-    public void startNewNumberGame(){
+    public void startNewNumberGame() {
         resetTimer();
 
         isImageGame = false;
         removeCenterComponent();
-        int iconWidth = puzzleBoard.getWidth()/gridSize;
+        int iconWidth = puzzleBoard.getWidth() / gridSize;
 
         ImageIcon icon = ImageTool.makeScaledImageIcon("Graphics/Number Button.jpg", iconWidth, iconWidth);
         puzzleBoard = new PuzzleBoard(icon, gridSize);
@@ -296,6 +297,11 @@ public class GameFrame extends JFrame{
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        if (OptionsMenu.isActivatedGameOverMode) {
+            OptionsMenu.gameOverGirl.stopGameOverGirl();
+            OptionsMenu.gameOverGirl = new GameOverGirl(false);
+            OptionsMenu.gameOverGirl.showGameOverGirl();
+        }
         Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
@@ -304,17 +310,17 @@ public class GameFrame extends JFrame{
         Random random = new Random();
         for (int i = 0; i < 500; i++) {
             int randomIndex = random.nextInt(PuzzleBoard.tiles.size());
-                puzzleBoard.swapTiles(PuzzleBoard.tiles.get(randomIndex), randomIndex);
-                puzzleBoard = new PuzzleBoard(gridSize);
+            puzzleBoard.swapTiles(PuzzleBoard.tiles.get(randomIndex), randomIndex);
+            puzzleBoard = new PuzzleBoard(gridSize);
         }
     }
 
     protected void removeCenterComponent() {
-        BorderLayout layout = (BorderLayout)backgroundPanel.getLayout();
+        BorderLayout layout = (BorderLayout) backgroundPanel.getLayout();
         backgroundPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
     }
 
-    public void resetTimer(){
+    public void resetTimer() {
         seconds = 0;
         minutes = 0;
         hours = 0;
@@ -325,34 +331,52 @@ public class GameFrame extends JFrame{
         timerPauseButton.setText("Pause");
     }
 
-    public boolean chooseCustomFile(){
+    public void chooseCustomFile() {
+        LookAndFeel originalLookAndFeel = UIManager.getLookAndFeel();
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         boolean isCorrectFile = false;
 
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(lastDirectory);
         int choice = fileChooser.showDialog(Game.gameFrame, "New Game");
 
-        if (choice == JFileChooser.APPROVE_OPTION){
+        if (choice == JFileChooser.APPROVE_OPTION) {
             File chosenFile = fileChooser.getSelectedFile();
 
             try {
                 FileInputStream inputStream = new FileInputStream(chosenFile);
-                if(ImageIO.read(inputStream) == null){
+                if (ImageIO.read(inputStream) == null) {
                     JOptionPane.showMessageDialog(Game.gameFrame, "The chosen file must be an image file", "Tile Master - Incorrect File Type", JOptionPane.INFORMATION_MESSAGE);
-                    return isCorrectFile;
+                    UIManager.setLookAndFeel(originalLookAndFeel);
+                    chooseCustomFile();
+                    return;
                 }
                 isCorrectFile = true;
+                lastDirectory = new File(chosenFile.getParent());
 
                 String filePath = chosenFile.getPath();
                 this.imagePath = filePath.replace('\\', '/');
 
-            } catch (IOException e) {
+            } catch (IOException | UnsupportedLookAndFeelException e) {
                 e.printStackTrace();
             }
 
 
         }
 
+        try {
+            UIManager.setLookAndFeel(originalLookAndFeel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        return isCorrectFile;
+        if(isCorrectFile)
+            Game.gameFrame.startNewPictureGame();
     }
 }

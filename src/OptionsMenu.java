@@ -1,9 +1,21 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class OptionsMenu{
+public class OptionsMenu {
 
-    public static void showOptions(){
+    static AdvertisingManager advertisingManager = new AdvertisingManager();
+    static GameOverGirl gameOverGirl = new GameOverGirl(false);
+    static boolean isShowingAdvertising = true;
+    static boolean isActivatedGameOverMode = false;
+    static int timeLimit =90;
+    static double phases = 8;
+    static double phaseDelay = timeLimit/phases;
+
+    public static void showOptions() {
+
+        Game.gameFrame.chronometer.stop();
+        Game.gameFrame.timerPauseButton.setText("Resume");
+
         Game.gameFrame.removeCenterComponent();
         JPanel menuComponents = new JPanel(new BorderLayout());
 
@@ -13,10 +25,10 @@ public class OptionsMenu{
         ImagePanel woodenPanel = new ImagePanel("Graphics/Wooden Background.jpg", 100, 300);
 
         ImagePanel gridOptionsPanel = new ImagePanel("Graphics/Metal Background Image.jpg", 200, 300);
-        gridOptionsPanel.setLayout(new GridLayout(4,1));
+        gridOptionsPanel.setLayout(new GridLayout(4, 1));
 
         ImagePanel buttonPanel = new ImagePanel("Graphics/Dark Metallic Panel.jpeg", 100, 300);
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setLayout(null);
 
 
         //=====================================Options Labels==================================================
@@ -25,63 +37,86 @@ public class OptionsMenu{
         JLabel advertisingLabel = new JLabel("Advertising");
         advertisingLabel.setFont(georgia);
 
-        JLabel gameOverGirl = new JLabel("Game Over Mode");
-        gameOverGirl.setFont(georgia);
+        JLabel gameOverOptionLabel = new JLabel("Game Over Mode");
+        gameOverOptionLabel.setFont(georgia);
 
+        JLabel timeLimitLabel = new JLabel("Time Limit (sec)");
+        timeLimitLabel.setFont(georgia);
 
 
         gridOptionsPanel.add(advertisingLabel);
-        gridOptionsPanel.add(gameOverGirl);
+        gridOptionsPanel.add(gameOverOptionLabel);
+        gridOptionsPanel.add(timeLimitLabel);
+
 
         //Filling out the space a bit
         JLabel emptyLabel = new JLabel(" ");
         emptyLabel.setFont(georgia);
         gridOptionsPanel.add(emptyLabel);
-        emptyLabel = new JLabel(" ");
-        emptyLabel.setFont(georgia);
-        gridOptionsPanel.add(emptyLabel);
 
         //================================Options Buttons============================================================
-            MenuButton advertisingButton = new MenuButton("ON", "Graphics/Metallic Button.jpg", 70, 55);
-            advertisingButton.setFont(new Font("Georgia", Font.BOLD, 14));
 
-            if (!Game.gameFrame.isShowingAdvertising)
-                advertisingButton.setText("OFF");
+        MenuButton advertisingButton = new MenuButton("ON", "Graphics/Metallic Button.jpg", 80, 55);
+        advertisingButton.setFont(new Font("Georgia", Font.BOLD, 14));
+        advertisingButton.setBounds(17, 12, 80, 55);
 
-            advertisingButton.addActionListener(e -> {
-                if (Game.gameFrame.isShowingAdvertising){
-                    Game.gameFrame.isShowingAdvertising = false;
-                    Game.gameFrame.advertisingManager.stopAdvertising();
-                }
-                else {
-                    Game.gameFrame.isShowingAdvertising = true;
-                    Game.gameFrame.advertisingManager.showAdvertising();
-                }
+        if (!isShowingAdvertising) {
+            advertisingButton.setText("OFF");
+        }
 
-                showOptions();
-            });
-
-            buttonPanel.add(advertisingButton);
-
-            MenuButton gameOverOptionButton = new MenuButton("OFF", "Graphics/Metallic Button.jpg", 70, 55);
-            gameOverOptionButton.setFont(new Font("Georgia", Font.BOLD, 14));
-            if (Game.gameFrame.isActivatedGameOver){
-                gameOverOptionButton.setText("ON");
+        advertisingButton.addActionListener(e -> {
+            if (isShowingAdvertising) {
+                advertisingManager.stopAdvertising();
+            } else {
+                advertisingManager.showAdvertising();
             }
-            gameOverOptionButton.addActionListener(e -> {
-                if (Game.gameFrame.isActivatedGameOver){
-                    Game.gameFrame.isActivatedGameOver = false;
-                    gameOverOptionButton.setText("OFF");
-                    //Turn off Game Over Feature
-                }
-                else{
-                    Game.gameFrame.isActivatedGameOver = true;
-                    gameOverOptionButton.setText("ON");
-                    //Turn on Game Over Feature
-                }
-            });
 
-            buttonPanel.add(gameOverOptionButton);
+            showOptions();
+        });
+
+        buttonPanel.add(advertisingButton);
+
+        MenuButton gameOverOptionButton = new MenuButton("OFF", "Graphics/Metallic Button.jpg", 80, 55);
+        gameOverOptionButton.setFont(new Font("Georgia", Font.BOLD, 14));
+        gameOverOptionButton.setBounds(17, 85, 80, 55);
+        if (isActivatedGameOverMode) {
+            gameOverOptionButton.setText("ON");
+
+        }
+        gameOverOptionButton.addActionListener(e -> {
+            if (isActivatedGameOverMode) {
+                gameOverGirl.stopGameOverGirl();
+
+            } else {
+                gameOverGirl.showGameOverGirl();
+            }
+
+            showOptions();
+        });
+
+        buttonPanel.add(gameOverOptionButton);
+
+
+        JFormattedTextField timeLimitField = new JFormattedTextField();
+        int number = timeLimit;
+        timeLimitField.setValue(number);
+        timeLimitField.setColumns(2);
+        timeLimitField.setFont(georgia);
+        timeLimitField.setHorizontalAlignment(JTextField.CENTER);
+        timeLimitField.setBounds(32, 160, 50, 50);
+        if(isActivatedGameOverMode)
+            timeLimitField.setEditable(true);
+        else
+            timeLimitField.setEditable(false);
+
+        timeLimitField.addPropertyChangeListener(e -> {
+            if (e.getSource() == timeLimitField) {
+
+                timeLimit = ((Number)timeLimitField.getValue()).intValue();
+                phaseDelay = timeLimit/phases;
+            }
+        });
+        buttonPanel.add(timeLimitField);
 
         //==============================Adding all the components to the menuPanel====================================
         centerPanel.add(gridOptionsPanel, BorderLayout.WEST);
@@ -98,8 +133,6 @@ public class OptionsMenu{
 
         Game.gameFrame.backgroundPanel.add(menuComponents);
         Game.gameFrame.backgroundPanel.revalidate();
-
-
 
 
     }
