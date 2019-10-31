@@ -24,7 +24,6 @@ public class GameOverGirl implements Runnable {
 
     public synchronized void stopGameOverGirl() {
         OptionsMenu.isActivatedGameFaces = false;
-        System.out.println("stopping");
         try {
             gameOverThread.interrupt();
             gameOverThread.join();
