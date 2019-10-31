@@ -83,7 +83,7 @@ public class GameFrame extends JFrame {
                 backgroundPanel.add(pausePanel, BorderLayout.CENTER);
 
             } else {
-                if(!(OptionsMenu.isActivatedGameFaces && OptionsMenu.gameOverGirl.isGameOver)){
+                if(!(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver)){
                     chronometer.start();
                 }
                 timerPauseButton.setText("Pause");
@@ -152,7 +152,7 @@ public class GameFrame extends JFrame {
         westComponentPanel = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, this.height - 260);
         westComponentPanel.setLayout(new BorderLayout());
 
-        if (OptionsMenu.isActivatedGameFaces) {
+        if (OptionsMenu.isActivatedGameOverMode) {
             OptionsMenu.gameOverGirl.showGameOverGirl();
         }
 
@@ -204,7 +204,7 @@ public class GameFrame extends JFrame {
         eastComponentPanel.add(moveCountAndTimerPanel, BorderLayout.SOUTH);
         backgroundPanel.add(eastComponentPanel, BorderLayout.EAST);
 
-        if (OptionsMenu.isActivatedGameFaces)
+        if (OptionsMenu.isActivatedGameOverMode)
             OptionsMenu.gameOverGirl.showGameOverGirl();
 
         //=====================Making and Adding Puzzle Board===========================================================
@@ -272,7 +272,7 @@ public class GameFrame extends JFrame {
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel(imagePath, 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
-        if (OptionsMenu.isActivatedGameFaces) {
+        if (OptionsMenu.isActivatedGameOverMode) {
             OptionsMenu.gameOverGirl.stopGameOverGirl();
             OptionsMenu.gameOverGirl = new GameOverGirl(false);
             OptionsMenu.gameOverGirl.showGameOverGirl();
@@ -297,7 +297,7 @@ public class GameFrame extends JFrame {
         eastComponentPanel.remove(miniPicture);
         miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
-        if (OptionsMenu.isActivatedGameFaces) {
+        if (OptionsMenu.isActivatedGameOverMode) {
             OptionsMenu.gameOverGirl.stopGameOverGirl();
             OptionsMenu.gameOverGirl = new GameOverGirl(false);
             OptionsMenu.gameOverGirl.showGameOverGirl();

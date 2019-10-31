@@ -1,16 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class OptionsMenu {
 
     static AdvertisingManager advertisingManager = new AdvertisingManager();
     static GameOverGirl gameOverGirl = new GameOverGirl(false);
     static boolean isShowingAdvertising = true;
-    static boolean isActivatedGameFaces = false;
+    static boolean isActivatedGameOverMode = false;
     static int timeLimit =90;
     static double phases = 8;
     static double phaseDelay = timeLimit/phases;
@@ -83,12 +79,12 @@ public class OptionsMenu {
         MenuButton gameOverOptionButton = new MenuButton("OFF", "Graphics/Metallic Button.jpg", 80, 55);
         gameOverOptionButton.setFont(new Font("Georgia", Font.BOLD, 14));
         gameOverOptionButton.setBounds(17, 85, 80, 55);
-        if (isActivatedGameFaces) {
+        if (isActivatedGameOverMode) {
             gameOverOptionButton.setText("ON");
 
         }
         gameOverOptionButton.addActionListener(e -> {
-            if (isActivatedGameFaces) {
+            if (isActivatedGameOverMode) {
                 gameOverGirl.stopGameOverGirl();
 
             } else {
@@ -108,7 +104,7 @@ public class OptionsMenu {
         timeLimitField.setFont(georgia);
         timeLimitField.setHorizontalAlignment(JTextField.CENTER);
         timeLimitField.setBounds(32, 160, 50, 50);
-        if(isActivatedGameFaces)
+        if(isActivatedGameOverMode)
             timeLimitField.setEditable(true);
         else
             timeLimitField.setEditable(false);

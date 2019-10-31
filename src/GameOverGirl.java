@@ -17,13 +17,13 @@ public class GameOverGirl implements Runnable {
     }
 
     public synchronized void showGameOverGirl() {
-        OptionsMenu.isActivatedGameFaces = true;
+        OptionsMenu.isActivatedGameOverMode = true;
         gameOverThread = new Thread(this);
         gameOverThread.start();
     }
 
     public synchronized void stopGameOverGirl() {
-        OptionsMenu.isActivatedGameFaces = false;
+        OptionsMenu.isActivatedGameOverMode = false;
         try {
             gameOverThread.interrupt();
             gameOverThread.join();
@@ -47,7 +47,7 @@ public class GameOverGirl implements Runnable {
         File folder;
         File[] folderFileArray;
         int i = 0;
-        while (OptionsMenu.isActivatedGameFaces) {
+        while (OptionsMenu.isActivatedGameOverMode) {
 
             if (isVictory) {
                 folder = new File("src/Victory Faces");
