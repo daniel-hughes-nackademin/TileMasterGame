@@ -91,6 +91,7 @@ public class GameFrame extends JFrame {
                 puzzleBoard.checkWinCondition();
             }
         });
+
         MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");
         shuffleButton.addActionListener(e -> {
             if (isImageGame)
@@ -225,8 +226,7 @@ public class GameFrame extends JFrame {
         pictureGame.addActionListener(e -> startNewPictureGame());
         MenuButton customPictureGame = new MenuButton("Choose Picture", "Graphics/Metallic Button.jpg");
         customPictureGame.addActionListener(e -> {
-            if (chooseCustomFile())
-                startNewPictureGame();
+            chooseCustomFile();
         });
         MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg");
         optionsMenu.addActionListener(e -> {
@@ -331,7 +331,7 @@ public class GameFrame extends JFrame {
         timerPauseButton.setText("Pause");
     }
 
-    public boolean chooseCustomFile() {
+    public void chooseCustomFile() {
         LookAndFeel originalLookAndFeel = UIManager.getLookAndFeel();
 
         try {
@@ -353,8 +353,9 @@ public class GameFrame extends JFrame {
                 FileInputStream inputStream = new FileInputStream(chosenFile);
                 if (ImageIO.read(inputStream) == null) {
                     JOptionPane.showMessageDialog(Game.gameFrame, "The chosen file must be an image file", "Tile Master - Incorrect File Type", JOptionPane.INFORMATION_MESSAGE);
+                    UIManager.setLookAndFeel(originalLookAndFeel);
                     chooseCustomFile();
-                    return isCorrectFile;
+                    return;
                 }
                 isCorrectFile = true;
                 lastDirectory = new File(chosenFile.getParent());
@@ -362,7 +363,7 @@ public class GameFrame extends JFrame {
                 String filePath = chosenFile.getPath();
                 this.imagePath = filePath.replace('\\', '/');
 
-            } catch (IOException e) {
+            } catch (IOException | UnsupportedLookAndFeelException e) {
                 e.printStackTrace();
             }
 
@@ -375,6 +376,7 @@ public class GameFrame extends JFrame {
             e.printStackTrace();
         }
 
-        return isCorrectFile;
+        if(isCorrectFile)
+            Game.gameFrame.startNewPictureGame();
     }
 }

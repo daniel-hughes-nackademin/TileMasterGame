@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 public class ImagePanel extends JPanel {
 
     private BufferedImage image;
-    protected String imagePath;
+    private String imagePath;
 
     public ImagePanel(String imagePath, int width, int height){
         this.imagePath = imagePath;
