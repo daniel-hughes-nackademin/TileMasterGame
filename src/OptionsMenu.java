@@ -11,7 +11,9 @@ public class OptionsMenu {
     static GameOverGirl gameOverGirl = new GameOverGirl(false);
     static boolean isShowingAdvertising = true;
     static boolean isActivatedGameFaces = false;
-    static int phaseDelay = 10;
+    static int timeLimit =90;
+    static double phases = 8;
+    static double phaseDelay = timeLimit/phases;
 
     public static void showOptions() {
 
@@ -42,13 +44,13 @@ public class OptionsMenu {
         JLabel gameOverOptionLabel = new JLabel("Game Over Mode");
         gameOverOptionLabel.setFont(georgia);
 
-        JLabel phaseDelayLabel = new JLabel("Phase Delay");
-        phaseDelayLabel.setFont(georgia);
+        JLabel timeLimitLabel = new JLabel("Time Limit (sec)");
+        timeLimitLabel.setFont(georgia);
 
 
         gridOptionsPanel.add(advertisingLabel);
         gridOptionsPanel.add(gameOverOptionLabel);
-        gridOptionsPanel.add(phaseDelayLabel);
+        gridOptionsPanel.add(timeLimitLabel);
 
 
         //Filling out the space a bit
@@ -57,6 +59,7 @@ public class OptionsMenu {
         gridOptionsPanel.add(emptyLabel);
 
         //================================Options Buttons============================================================
+
         MenuButton advertisingButton = new MenuButton("ON", "Graphics/Metallic Button.jpg", 80, 55);
         advertisingButton.setFont(new Font("Georgia", Font.BOLD, 14));
         advertisingButton.setBounds(17, 12, 80, 55);
@@ -82,10 +85,12 @@ public class OptionsMenu {
         gameOverOptionButton.setBounds(17, 85, 80, 55);
         if (isActivatedGameFaces) {
             gameOverOptionButton.setText("ON");
+
         }
         gameOverOptionButton.addActionListener(e -> {
             if (isActivatedGameFaces) {
                 gameOverGirl.stopGameOverGirl();
+
             } else {
                 gameOverGirl.showGameOverGirl();
             }
@@ -95,48 +100,27 @@ public class OptionsMenu {
 
         buttonPanel.add(gameOverOptionButton);
 
-        JFormattedTextField phaseDelayField = new JFormattedTextField();
-        int number = phaseDelay;
-        phaseDelayField.setValue(number);
-        phaseDelayField.setColumns(2);
-        phaseDelayField.setFont(georgia);
-        phaseDelayField.setHorizontalAlignment(JTextField.CENTER);
-        phaseDelayField.setBounds(32, 160, 50, 50);
-        phaseDelayField.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent e) {
-                if (e.getSource() == phaseDelayField) {
 
-                    phaseDelay = ((Number)phaseDelayField.getValue()).intValue();
-                    System.out.println(phaseDelay);
-                }
+        JFormattedTextField timeLimitField = new JFormattedTextField();
+        int number = timeLimit;
+        timeLimitField.setValue(number);
+        timeLimitField.setColumns(2);
+        timeLimitField.setFont(georgia);
+        timeLimitField.setHorizontalAlignment(JTextField.CENTER);
+        timeLimitField.setBounds(32, 160, 50, 50);
+        if(isActivatedGameFaces)
+            timeLimitField.setEditable(true);
+        else
+            timeLimitField.setEditable(false);
+
+        timeLimitField.addPropertyChangeListener(e -> {
+            if (e.getSource() == timeLimitField) {
+
+                timeLimit = ((Number)timeLimitField.getValue()).intValue();
+                phaseDelay = timeLimit/phases;
             }
         });
-
-        /*phaseDelayField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                String input = ((JTextField)e.getSource()).getText() + e.getKeyChar();
-
-                System.out.println(input);
-                boolean isCorrectInput = true;
-                for (int i = 0; i < input.length(); i++) {
-                    char c = input.charAt(i);
-                    if (!Character.isDigit(c))
-                        isCorrectInput = false;
-                }
-                if(Integer.parseInt(input) <= 0)
-                    isCorrectInput = false;
-                if (isCorrectInput){
-                    System.out.println("Correct: \n" + input);
-
-                    int test = Integer.parseInt(input);
-                    System.out.println(test);
-                    phaseDelay = test;
-                }
-            }
-        });*/
-        buttonPanel.add(phaseDelayField);
+        buttonPanel.add(timeLimitField);
 
         //==============================Adding all the components to the menuPanel====================================
         centerPanel.add(gridOptionsPanel, BorderLayout.WEST);

@@ -83,7 +83,9 @@ public class GameFrame extends JFrame {
                 backgroundPanel.add(pausePanel, BorderLayout.CENTER);
 
             } else {
-                chronometer.start();
+                if(!(OptionsMenu.isActivatedGameFaces && OptionsMenu.gameOverGirl.isGameOver)){
+                    chronometer.start();
+                }
                 timerPauseButton.setText("Pause");
                 refreshPuzzleBoard();
                 puzzleBoard.checkWinCondition();

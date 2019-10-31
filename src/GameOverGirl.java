@@ -9,7 +9,7 @@ public class GameOverGirl implements Runnable {
     Thread gameOverThread;
     ImagePanel gameFacesPanel;
     boolean isVictory;
-
+    boolean isGameOver = false;
 
 
     public GameOverGirl(boolean isVictory) {
@@ -18,11 +18,6 @@ public class GameOverGirl implements Runnable {
 
     public synchronized void showGameOverGirl() {
         OptionsMenu.isActivatedGameFaces = true;
-        Game.gameFrame.westComponentPanel.removeAll();
-        Game.gameFrame.westComponentPanel.add(new JPanel(), BorderLayout.NORTH);
-        Game.gameFrame.advertisingBanner = new ImagePanel("Graphics/Metal Texture Pattern.jpg", 150, 390);
-        Game.gameFrame.westComponentPanel.add(Game.gameFrame.advertisingBanner, BorderLayout.SOUTH);
-        Game.gameFrame.westComponentPanel.revalidate();
         gameOverThread = new Thread(this);
         gameOverThread.start();
     }
@@ -67,36 +62,41 @@ public class GameOverGirl implements Runnable {
             } else {
                 folder = new File("src/Game Over Faces");
                 folderFileArray = folder.listFiles();
-                showGameFaces(folderFileArray);
+                if(!isGameOver)
+                    showGameFaces(folderFileArray);
             }
         }
     }
 
     private void showGameFaces(File[] folderFileArray) {
+
+
         int totalSeconds = Game.gameFrame.seconds + Game.gameFrame.minutes * 60;
         String faceExpressionFilePath;
         for (int i = 0; i < folderFileArray.length; i++) {
-            if (OptionsMenu.phaseDelay * i == totalSeconds) {
+            if ((int)(OptionsMenu.phaseDelay * i) == totalSeconds) {
                 try {
                     ImageIO.read(folderFileArray[i]);
                     faceExpressionFilePath = folderFileArray[i].getPath().replace('\\', '/');
                     faceExpressionFilePath = faceExpressionFilePath.substring(faceExpressionFilePath.indexOf('/') + 1);
-
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
                     BorderLayout layout = (BorderLayout) Game.gameFrame.eastComponentPanel.getLayout();
                     Game.gameFrame.eastComponentPanel.remove(layout.getLayoutComponent(BorderLayout.NORTH));
                     gameFacesPanel = new ImagePanel(faceExpressionFilePath, 250, 250);
                     Game.gameFrame.eastComponentPanel.add(gameFacesPanel, BorderLayout.NORTH);
                     Game.gameFrame.backgroundPanel.revalidate();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
 
-                if (i >= folderFileArray.length - 1) {
+                if (totalSeconds >= OptionsMenu.timeLimit) {
                     for (Tile tile : PuzzleBoard.tiles) {
                         tile.setEnabled(false);
                     }
+                    Game.gameFrame.chronometer.stop();
+                    isGameOver = true;
                     JOptionPane.showMessageDialog(Game.gameFrame, "Oh NOOO! You ran out of time!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+
                 }
 
 
