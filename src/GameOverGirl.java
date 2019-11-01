@@ -105,7 +105,7 @@ public class GameOverGirl implements Runnable {
     }
 
     private void showVictoryFaces(int i, File[] folderFileArray) {
-        int delayTimeMilliSec = 2_000;
+        int delayTimeMilliSec = 1_800;
 
         String faceExpressionFilePath;
 
