@@ -215,9 +215,15 @@ public class GameFrame extends JFrame {
 
 
         MenuButton numberGame = new MenuButton("Number Game", "Graphics/Metallic Button.jpg");
-        numberGame.addActionListener(e -> startNewNumberGame());
+        numberGame.addActionListener(e -> {
+            isImageGame = false;
+            startNewGame();
+        });
         MenuButton pictureGame = new MenuButton("Picture Game", "Graphics/Metallic Button.jpg");
-        pictureGame.addActionListener(e -> startNewPictureGame());
+        pictureGame.addActionListener(e -> {
+            isImageGame = true;
+            startNewGame();
+        });
         MenuButton customPictureGame = new MenuButton("Choose Picture", "Graphics/Metallic Button.jpg");
         customPictureGame.addActionListener(e -> {
             chooseCustomFile();
@@ -251,17 +257,44 @@ public class GameFrame extends JFrame {
         if( !(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver)){
             chronometer.start();
         }
-        if(!isCompletedPuzzle)
+        if(!(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver) && !isCompletedPuzzle)
             timerPauseButton.setText("Pause");
         refreshPuzzleBoard();
         puzzleBoard.checkWinCondition();
     }
 
     void startNewGame() {
-        if (isImageGame)
-            startNewPictureGame();
-        else
-            startNewNumberGame();
+        isCompletedPuzzle = false;
+        optionsMenuButton.setText("Options");
+        resetTimer();
+        removeCenterComponent();
+
+        if(isImageGame){
+            puzzleBoard = new PuzzleBoard(imagePath, gridSize);
+        }
+        else{
+            int iconSideLength = puzzleBoard.getWidth() / gridSize;
+            ImageIcon icon = ImageTool.makeScaledImageIcon("Graphics/Number Button.jpg", iconSideLength, iconSideLength);
+            puzzleBoard = new PuzzleBoard(icon, gridSize);
+        }
+        automaticallySwapTilesRandomly();
+        backgroundPanel.add(puzzleBoard);
+        eastComponentPanel.remove(miniPicture);
+
+        if(isImageGame){
+            miniPicture = new ImagePanel(imagePath, 250, 250);
+        }
+        else {
+            miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
+        }
+        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        if (OptionsMenu.isActivatedGameOverMode) {
+            OptionsMenu.gameOverGirl.stopGameOverGirl();
+            OptionsMenu.gameOverGirl = new GameOverGirl(false);
+            OptionsMenu.gameOverGirl.showGameOverGirl();
+        }
+        Game.gameFrame.resetMoveCounter();
+        this.revalidate();
     }
 
     void resetMoveCounter() {
@@ -274,55 +307,6 @@ public class GameFrame extends JFrame {
         removeCenterComponent();
         puzzleBoard = new PuzzleBoard(gridSize);
         backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
-        this.revalidate();
-    }
-
-
-    public void startNewPictureGame() {
-        isCompletedPuzzle = false;
-        resetTimer();
-
-        isImageGame = true;
-        removeCenterComponent();
-        puzzleBoard = new PuzzleBoard(imagePath, gridSize);
-        automaticallySwapTilesRandomly();
-        backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
-
-        eastComponentPanel.remove(miniPicture);
-        miniPicture = new ImagePanel(imagePath, 250, 250);
-        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
-        if (OptionsMenu.isActivatedGameOverMode) {
-            OptionsMenu.gameOverGirl.stopGameOverGirl();
-            OptionsMenu.gameOverGirl = new GameOverGirl(false);
-            OptionsMenu.gameOverGirl.showGameOverGirl();
-        }
-        Game.gameFrame.resetMoveCounter();
-        this.revalidate();
-    }
-
-
-    public void startNewNumberGame() {
-        isCompletedPuzzle = false;
-        resetTimer();
-
-        isImageGame = false;
-        removeCenterComponent();
-        int iconWidth = puzzleBoard.getWidth() / gridSize;
-
-        ImageIcon icon = ImageTool.makeScaledImageIcon("Graphics/Number Button.jpg", iconWidth, iconWidth);
-        puzzleBoard = new PuzzleBoard(icon, gridSize);
-        automaticallySwapTilesRandomly();
-        backgroundPanel.add(puzzleBoard);
-
-        eastComponentPanel.remove(miniPicture);
-        miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
-        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
-        if (OptionsMenu.isActivatedGameOverMode) {
-            OptionsMenu.gameOverGirl.stopGameOverGirl();
-            OptionsMenu.gameOverGirl = new GameOverGirl(false);
-            OptionsMenu.gameOverGirl.showGameOverGirl();
-        }
-        Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
 
@@ -396,7 +380,9 @@ public class GameFrame extends JFrame {
             e.printStackTrace();
         }
 
-        if(isCorrectFile)
-            Game.gameFrame.startNewPictureGame();
+        if(isCorrectFile){
+            isImageGame = true;
+            startNewGame();
+        }
     }
 }

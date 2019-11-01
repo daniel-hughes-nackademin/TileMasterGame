@@ -15,7 +15,6 @@ public class OptionsMenu {
 
         Game.gameFrame.chronometer.stop();
         if (isActivatedGameOverMode && gameOverGirl.isGameOver || Game.gameFrame.isCompletedPuzzle){
-            System.out.println(Game.gameFrame.isCompletedPuzzle);
             Game.gameFrame.timerPauseButton.setText("New Game");
         }
         else{
