@@ -28,11 +28,13 @@ public class GameFrame extends JFrame {
 
     File lastDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Pictures");
     String imagePath = "Graphics/Military Anime Girl.jpg";
+    boolean isCompletedPuzzle = false;
     boolean isImageGame = true;
 
     Timer chronometer;
     int seconds, minutes, hours;
     MenuButton timerPauseButton;
+    MenuButton optionsMenuButton;
 
     public GameFrame() {
         this.setResizable(false);
@@ -82,22 +84,18 @@ public class GameFrame extends JFrame {
                 pausePanel.add(pauseLabel, new GridBagConstraints()); //Centers Label
                 backgroundPanel.add(pausePanel, BorderLayout.CENTER);
 
-            } else {
-                if(!(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver)){
-                    chronometer.start();
-                }
-                timerPauseButton.setText("Pause");
-                refreshPuzzleBoard();
-                puzzleBoard.checkWinCondition();
+            } else if (timerPauseButton.getText() == "New Game"){
+                startNewGame();
+            }
+            else if (timerPauseButton.getText() == "Resume"){
+                optionsMenuButton.setText("Options");
+                resumeGame();
             }
         });
 
         MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");
         shuffleButton.addActionListener(e -> {
-            if (isImageGame)
-                startNewPictureGame();
-            else
-                startNewNumberGame();
+            startNewGame();
         });
 
 
@@ -122,11 +120,7 @@ public class GameFrame extends JFrame {
         sizeSlider.addChangeListener(e -> {
             showSizeLabel.setText("  " + sizeSlider.getValue());
             gridSize = sizeSlider.getValue();
-
-            if (isImageGame)
-                startNewPictureGame();
-            else
-                startNewNumberGame();
+            startNewGame();
         });
         scalingPanel.add(sizeSlider);
 
@@ -222,22 +216,35 @@ public class GameFrame extends JFrame {
 
 
         MenuButton numberGame = new MenuButton("Number Game", "Graphics/Metallic Button.jpg");
-        numberGame.addActionListener(e -> startNewNumberGame());
+        numberGame.addActionListener(e -> {
+            isImageGame = false;
+            startNewGame();
+        });
         MenuButton pictureGame = new MenuButton("Picture Game", "Graphics/Metallic Button.jpg");
-        pictureGame.addActionListener(e -> startNewPictureGame());
+        pictureGame.addActionListener(e -> {
+            isImageGame = true;
+            startNewGame();
+        });
         MenuButton customPictureGame = new MenuButton("Choose Picture", "Graphics/Metallic Button.jpg");
         customPictureGame.addActionListener(e -> {
             chooseCustomFile();
         });
-        MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg");
-        optionsMenu.addActionListener(e -> {
-            OptionsMenu.showOptions();
+        optionsMenuButton = new MenuButton("Options", "Graphics/Metallic Button.jpg");
+        optionsMenuButton.addActionListener(e -> {
+            if(optionsMenuButton.getText() == "Options"){
+                optionsMenuButton.setText("Go Back");
+                OptionsMenu.showOptions();
+            }
+            else if(optionsMenuButton.getText() == "Go Back"){
+                optionsMenuButton.setText("Options");
+                resumeGame();
+            }
         });
 
         menuButtonPanel.add(numberGame);
         menuButtonPanel.add(pictureGame);
         menuButtonPanel.add(customPictureGame);
-        menuButtonPanel.add(optionsMenu);
+        menuButtonPanel.add(optionsMenuButton);
 
         backgroundPanel.add(menuButtonPanel, BorderLayout.SOUTH);
 
@@ -245,6 +252,50 @@ public class GameFrame extends JFrame {
 
         this.setVisible(true);
 
+    }
+
+    void resumeGame() {
+        if( !(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver)){
+            chronometer.start();
+        }
+        if(!(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver) && !isCompletedPuzzle)
+            timerPauseButton.setText("Pause");
+        refreshPuzzleBoard();
+        puzzleBoard.checkWinCondition();
+    }
+
+    void startNewGame() {
+        isCompletedPuzzle = false;
+        optionsMenuButton.setText("Options");
+        resetTimer();
+        removeCenterComponent();
+
+        if(isImageGame){
+            puzzleBoard = new PuzzleBoard(imagePath, gridSize);
+        }
+        else{
+            int iconSideLength = puzzleBoard.getWidth() / gridSize;
+            ImageIcon icon = ImageTool.makeScaledImageIcon("Graphics/Number Button.jpg", iconSideLength, iconSideLength);
+            puzzleBoard = new PuzzleBoard(icon, gridSize);
+        }
+        automaticallySwapTilesRandomly();
+        backgroundPanel.add(puzzleBoard);
+        eastComponentPanel.remove(miniPicture);
+
+        if(isImageGame){
+            miniPicture = new ImagePanel(imagePath, 250, 250);
+        }
+        else {
+            miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
+        }
+        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+        if (OptionsMenu.isActivatedGameOverMode) {
+            OptionsMenu.gameOverGirl.stopGameOverGirl();
+            OptionsMenu.gameOverGirl = new GameOverGirl(false);
+            OptionsMenu.gameOverGirl.showGameOverGirl();
+        }
+        Game.gameFrame.resetMoveCounter();
+        this.revalidate();
     }
 
     void resetMoveCounter() {
@@ -257,53 +308,6 @@ public class GameFrame extends JFrame {
         removeCenterComponent();
         puzzleBoard = new PuzzleBoard(gridSize);
         backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
-        this.revalidate();
-    }
-
-
-    public void startNewPictureGame() {
-        resetTimer();
-
-        isImageGame = true;
-        removeCenterComponent();
-        puzzleBoard = new PuzzleBoard(imagePath, gridSize);
-        automaticallySwapTilesRandomly();
-        backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
-
-        eastComponentPanel.remove(miniPicture);
-        miniPicture = new ImagePanel(imagePath, 250, 250);
-        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
-        if (OptionsMenu.isActivatedGameOverMode) {
-            OptionsMenu.gameOverGirl.stopGameOverGirl();
-            OptionsMenu.gameOverGirl = new GameOverGirl(false);
-            OptionsMenu.gameOverGirl.showGameOverGirl();
-        }
-        Game.gameFrame.resetMoveCounter();
-        this.revalidate();
-    }
-
-
-    public void startNewNumberGame() {
-        resetTimer();
-
-        isImageGame = false;
-        removeCenterComponent();
-        int iconWidth = puzzleBoard.getWidth() / gridSize;
-
-        ImageIcon icon = ImageTool.makeScaledImageIcon("Graphics/Number Button.jpg", iconWidth, iconWidth);
-        puzzleBoard = new PuzzleBoard(icon, gridSize);
-        automaticallySwapTilesRandomly();
-        backgroundPanel.add(puzzleBoard);
-
-        eastComponentPanel.remove(miniPicture);
-        miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
-        eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
-        if (OptionsMenu.isActivatedGameOverMode) {
-            OptionsMenu.gameOverGirl.stopGameOverGirl();
-            OptionsMenu.gameOverGirl = new GameOverGirl(false);
-            OptionsMenu.gameOverGirl.showGameOverGirl();
-        }
-        Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
 
@@ -377,7 +381,9 @@ public class GameFrame extends JFrame {
             e.printStackTrace();
         }
 
-        if(isCorrectFile)
-            Game.gameFrame.startNewPictureGame();
+        if(isCorrectFile){
+            isImageGame = true;
+            startNewGame();
+        }
     }
 }

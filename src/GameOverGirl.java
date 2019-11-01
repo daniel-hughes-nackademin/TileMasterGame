@@ -93,6 +93,7 @@ public class GameOverGirl implements Runnable {
                         tile.setEnabled(false);
                     }
                     Game.gameFrame.chronometer.stop();
+                    Game.gameFrame.timerPauseButton.setText("New Game");
                     isGameOver = true;
                     JOptionPane.showMessageDialog(Game.gameFrame, "Oh NOOO! You ran out of time!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
 
@@ -104,7 +105,7 @@ public class GameOverGirl implements Runnable {
     }
 
     private void showVictoryFaces(int i, File[] folderFileArray) {
-        int delayTimeMilliSec = 2_000;
+        int delayTimeMilliSec = 1_800;
 
         String faceExpressionFilePath;
 

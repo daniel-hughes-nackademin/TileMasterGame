@@ -183,6 +183,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
         }
 
         Game.gameFrame.chronometer.stop();
+        Game.gameFrame.timerPauseButton.setText("New Game");
 
         if (OptionsMenu.isActivatedGameOverMode) {
             OptionsMenu.gameOverGirl.stopGameOverGirl();
@@ -195,10 +196,13 @@ public class PuzzleBoard extends JPanel implements ActionListener {
             Game.gameFrame.backgroundPanel.add(new ImagePanel(Game.gameFrame.imagePath, 500, 500), BorderLayout.CENTER);
             Game.gameFrame.revalidate();
         } else {
-            JOptionPane.showMessageDialog(Game.gameFrame, "Congratulations!", "Tile Master - Victory", JOptionPane.PLAIN_MESSAGE);
+            if(!Game.gameFrame.isCompletedPuzzle) //If this message has not been shown before for this victory
+                JOptionPane.showMessageDialog(Game.gameFrame, "Congratulations!", "Tile Master - Victory", JOptionPane.PLAIN_MESSAGE);
             for (Tile tile : tiles) {
                 tile.setEnabled(false);
             }
         }
+
+        Game.gameFrame.isCompletedPuzzle = true;
     }
 }

@@ -2,19 +2,24 @@ import javax.swing.*;
 import java.awt.*;
 
 public class OptionsMenu {
-
-    static AdvertisingManager advertisingManager = new AdvertisingManager();
-    static GameOverGirl gameOverGirl = new GameOverGirl(false);
     static boolean isShowingAdvertising = true;
     static boolean isActivatedGameOverMode = false;
-    static int timeLimit =90;
-    static double phases = 8;
-    static double phaseDelay = timeLimit/phases;
+    static AdvertisingManager advertisingManager = new AdvertisingManager();
+    static GameOverGirl gameOverGirl = new GameOverGirl(false);
+    static int timeLimit = 90;
+    static final double PHASES = 8;
+    static double phaseDelay = timeLimit/ PHASES;
 
     public static void showOptions() {
 
+
         Game.gameFrame.chronometer.stop();
-        Game.gameFrame.timerPauseButton.setText("Resume");
+        if (isActivatedGameOverMode && gameOverGirl.isGameOver || Game.gameFrame.isCompletedPuzzle){
+            Game.gameFrame.timerPauseButton.setText("New Game");
+        }
+        else{
+            Game.gameFrame.timerPauseButton.setText("Resume");
+        }
 
         Game.gameFrame.removeCenterComponent();
         JPanel menuComponents = new JPanel(new BorderLayout());
@@ -37,7 +42,7 @@ public class OptionsMenu {
         JLabel advertisingLabel = new JLabel("Advertising");
         advertisingLabel.setFont(georgia);
 
-        JLabel gameOverOptionLabel = new JLabel("Game Over Mode");
+        JLabel gameOverOptionLabel = new JLabel("Challenge Mode");
         gameOverOptionLabel.setFont(georgia);
 
         JLabel timeLimitLabel = new JLabel("Time Limit (sec)");
@@ -97,27 +102,32 @@ public class OptionsMenu {
         buttonPanel.add(gameOverOptionButton);
 
 
-        JFormattedTextField timeLimitField = new JFormattedTextField();
-        int number = timeLimit;
-        timeLimitField.setValue(number);
-        timeLimitField.setColumns(2);
-        timeLimitField.setFont(georgia);
-        timeLimitField.setHorizontalAlignment(JTextField.CENTER);
-        timeLimitField.setBounds(32, 160, 50, 50);
-        if(isActivatedGameOverMode)
-            timeLimitField.setEditable(true);
-        else
-            timeLimitField.setEditable(false);
+        if(isActivatedGameOverMode) {
+            JFormattedTextField timeLimitField = new JFormattedTextField();
+            int number = timeLimit;
+            timeLimitField.setValue(number);
+            timeLimitField.setColumns(2);
+            timeLimitField.setFont(georgia);
+            timeLimitField.setHorizontalAlignment(JTextField.CENTER);
+            timeLimitField.setBounds(32, 160, 50, 50);
 
-        timeLimitField.addPropertyChangeListener(e -> {
-            if (e.getSource() == timeLimitField) {
+            timeLimitField.addPropertyChangeListener(e -> {
+                if (e.getSource() == timeLimitField) {
 
-                timeLimit = ((Number)timeLimitField.getValue()).intValue();
-                phaseDelay = timeLimit/phases;
-            }
-        });
-        buttonPanel.add(timeLimitField);
-
+                    timeLimit = ((Number) timeLimitField.getValue()).intValue();
+                    phaseDelay = timeLimit / PHASES;
+                }
+            });
+            buttonPanel.add(timeLimitField);
+        }
+        else {
+            JTextField timeLimitOffField = new JTextField("OFF");
+            timeLimitOffField.setEditable(false);
+            timeLimitOffField.setFont(georgia);
+            timeLimitOffField.setHorizontalAlignment(JTextField.CENTER);
+            timeLimitOffField.setBounds(32, 160, 50, 50);
+            buttonPanel.add(timeLimitOffField);
+        }
         //==============================Adding all the components to the menuPanel====================================
         centerPanel.add(gridOptionsPanel, BorderLayout.WEST);
         centerPanel.add(buttonPanel, BorderLayout.EAST);
