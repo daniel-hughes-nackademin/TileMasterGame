@@ -7,7 +7,7 @@ public class OptionsMenu {
     static GameOverGirl gameOverGirl = new GameOverGirl(false);
     static boolean isShowingAdvertising = true;
     static boolean isActivatedGameOverMode = false;
-    static int timeLimit =90;
+    static int timeLimit = 90;
     static double phases = 8;
     static double phaseDelay = timeLimit/phases;
 
@@ -37,7 +37,7 @@ public class OptionsMenu {
         JLabel advertisingLabel = new JLabel("Advertising");
         advertisingLabel.setFont(georgia);
 
-        JLabel gameOverOptionLabel = new JLabel("Game Over Mode");
+        JLabel gameOverOptionLabel = new JLabel("Challenge Mode");
         gameOverOptionLabel.setFont(georgia);
 
         JLabel timeLimitLabel = new JLabel("Time Limit (sec)");
