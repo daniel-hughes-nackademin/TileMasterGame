@@ -28,11 +28,13 @@ public class GameFrame extends JFrame {
 
     File lastDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Pictures");
     String imagePath = "Graphics/Military Anime Girl.jpg";
+    boolean isCompletedPuzzle = false;
     boolean isImageGame = true;
 
     Timer chronometer;
     int seconds, minutes, hours;
     MenuButton timerPauseButton;
+    MenuButton optionsMenuButton;
 
     public GameFrame() {
         this.setResizable(false);
@@ -85,13 +87,9 @@ public class GameFrame extends JFrame {
             } else if (timerPauseButton.getText() == "New Game"){
                 startNewGame();
             }
-            else {
-                if(!(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver)){
-                    chronometer.start();
-                }
-                timerPauseButton.setText("Pause");
-                refreshPuzzleBoard();
-                puzzleBoard.checkWinCondition();
+            else if (timerPauseButton.getText() == "Resume"){
+                optionsMenuButton.setText("Options");
+                resumeGame();
             }
         });
 
@@ -224,15 +222,22 @@ public class GameFrame extends JFrame {
         customPictureGame.addActionListener(e -> {
             chooseCustomFile();
         });
-        MenuButton optionsMenu = new MenuButton("Options", "Graphics/Metallic Button.jpg");
-        optionsMenu.addActionListener(e -> {
-            OptionsMenu.showOptions();
+        optionsMenuButton = new MenuButton("Options", "Graphics/Metallic Button.jpg");
+        optionsMenuButton.addActionListener(e -> {
+            if(optionsMenuButton.getText() == "Options"){
+                optionsMenuButton.setText("Go Back");
+                OptionsMenu.showOptions();
+            }
+            else if(optionsMenuButton.getText() == "Go Back"){
+                optionsMenuButton.setText("Options");
+                resumeGame();
+            }
         });
 
         menuButtonPanel.add(numberGame);
         menuButtonPanel.add(pictureGame);
         menuButtonPanel.add(customPictureGame);
-        menuButtonPanel.add(optionsMenu);
+        menuButtonPanel.add(optionsMenuButton);
 
         backgroundPanel.add(menuButtonPanel, BorderLayout.SOUTH);
 
@@ -240,6 +245,16 @@ public class GameFrame extends JFrame {
 
         this.setVisible(true);
 
+    }
+
+    void resumeGame() {
+        if( !(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver)){
+            chronometer.start();
+        }
+        if(!isCompletedPuzzle)
+            timerPauseButton.setText("Pause");
+        refreshPuzzleBoard();
+        puzzleBoard.checkWinCondition();
     }
 
     void startNewGame() {
@@ -264,6 +279,7 @@ public class GameFrame extends JFrame {
 
 
     public void startNewPictureGame() {
+        isCompletedPuzzle = false;
         resetTimer();
 
         isImageGame = true;
@@ -286,6 +302,7 @@ public class GameFrame extends JFrame {
 
 
     public void startNewNumberGame() {
+        isCompletedPuzzle = false;
         resetTimer();
 
         isImageGame = false;

@@ -2,19 +2,25 @@ import javax.swing.*;
 import java.awt.*;
 
 public class OptionsMenu {
-
-    static AdvertisingManager advertisingManager = new AdvertisingManager();
-    static GameOverGirl gameOverGirl = new GameOverGirl(false);
     static boolean isShowingAdvertising = true;
     static boolean isActivatedGameOverMode = false;
+    static AdvertisingManager advertisingManager = new AdvertisingManager();
+    static GameOverGirl gameOverGirl = new GameOverGirl(false);
     static int timeLimit = 90;
     static double phases = 8;
     static double phaseDelay = timeLimit/phases;
 
     public static void showOptions() {
 
+
         Game.gameFrame.chronometer.stop();
-        Game.gameFrame.timerPauseButton.setText("Resume");
+        if (isActivatedGameOverMode && gameOverGirl.isGameOver || Game.gameFrame.isCompletedPuzzle){
+            System.out.println(Game.gameFrame.isCompletedPuzzle);
+            Game.gameFrame.timerPauseButton.setText("New Game");
+        }
+        else{
+            Game.gameFrame.timerPauseButton.setText("Resume");
+        }
 
         Game.gameFrame.removeCenterComponent();
         JPanel menuComponents = new JPanel(new BorderLayout());
