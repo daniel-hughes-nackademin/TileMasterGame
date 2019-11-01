@@ -93,6 +93,7 @@ public class GameOverGirl implements Runnable {
                         tile.setEnabled(false);
                     }
                     Game.gameFrame.chronometer.stop();
+                    Game.gameFrame.timerPauseButton.setText("New Game");
                     isGameOver = true;
                     JOptionPane.showMessageDialog(Game.gameFrame, "Oh NOOO! You ran out of time!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
 

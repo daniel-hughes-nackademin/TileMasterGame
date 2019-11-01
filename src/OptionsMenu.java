@@ -97,27 +97,32 @@ public class OptionsMenu {
         buttonPanel.add(gameOverOptionButton);
 
 
-        JFormattedTextField timeLimitField = new JFormattedTextField();
-        int number = timeLimit;
-        timeLimitField.setValue(number);
-        timeLimitField.setColumns(2);
-        timeLimitField.setFont(georgia);
-        timeLimitField.setHorizontalAlignment(JTextField.CENTER);
-        timeLimitField.setBounds(32, 160, 50, 50);
-        if(isActivatedGameOverMode)
-            timeLimitField.setEditable(true);
-        else
-            timeLimitField.setEditable(false);
+        if(isActivatedGameOverMode) {
+            JFormattedTextField timeLimitField = new JFormattedTextField();
+            int number = timeLimit;
+            timeLimitField.setValue(number);
+            timeLimitField.setColumns(2);
+            timeLimitField.setFont(georgia);
+            timeLimitField.setHorizontalAlignment(JTextField.CENTER);
+            timeLimitField.setBounds(32, 160, 50, 50);
 
-        timeLimitField.addPropertyChangeListener(e -> {
-            if (e.getSource() == timeLimitField) {
+            timeLimitField.addPropertyChangeListener(e -> {
+                if (e.getSource() == timeLimitField) {
 
-                timeLimit = ((Number)timeLimitField.getValue()).intValue();
-                phaseDelay = timeLimit/phases;
-            }
-        });
-        buttonPanel.add(timeLimitField);
-
+                    timeLimit = ((Number) timeLimitField.getValue()).intValue();
+                    phaseDelay = timeLimit / phases;
+                }
+            });
+            buttonPanel.add(timeLimitField);
+        }
+        else {
+            JTextField timeLimitOffField = new JTextField("OFF");
+            timeLimitOffField.setEditable(false);
+            timeLimitOffField.setFont(georgia);
+            timeLimitOffField.setHorizontalAlignment(JTextField.CENTER);
+            timeLimitOffField.setBounds(32, 160, 50, 50);
+            buttonPanel.add(timeLimitOffField);
+        }
         //==============================Adding all the components to the menuPanel====================================
         centerPanel.add(gridOptionsPanel, BorderLayout.WEST);
         centerPanel.add(buttonPanel, BorderLayout.EAST);
