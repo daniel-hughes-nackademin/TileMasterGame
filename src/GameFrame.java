@@ -118,6 +118,7 @@ public class GameFrame extends JFrame {
         sizeSlider.setPreferredSize(new Dimension(150, 30));
         sizeSlider.setMinorTickSpacing(1);
         sizeSlider.setPaintTicks(true);
+        //sizeSlider.setUI();
         sizeSlider.addChangeListener(e -> {
             showSizeLabel.setText("  " + sizeSlider.getValue());
             gridSize = sizeSlider.getValue();
