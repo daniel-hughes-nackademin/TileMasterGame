@@ -183,6 +183,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
         }
 
         Game.gameFrame.chronometer.stop();
+        Game.gameFrame.timerPauseButton.setText("New Game");
 
         if (OptionsMenu.isActivatedGameOverMode) {
             OptionsMenu.gameOverGirl.stopGameOverGirl();

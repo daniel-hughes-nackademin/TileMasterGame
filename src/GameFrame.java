@@ -82,7 +82,10 @@ public class GameFrame extends JFrame {
                 pausePanel.add(pauseLabel, new GridBagConstraints()); //Centers Label
                 backgroundPanel.add(pausePanel, BorderLayout.CENTER);
 
-            } else {
+            } else if (timerPauseButton.getText() == "New Game"){
+                startNewGame();
+            }
+            else {
                 if(!(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver)){
                     chronometer.start();
                 }
@@ -94,10 +97,7 @@ public class GameFrame extends JFrame {
 
         MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");
         shuffleButton.addActionListener(e -> {
-            if (isImageGame)
-                startNewPictureGame();
-            else
-                startNewNumberGame();
+            startNewGame();
         });
 
 
@@ -121,11 +121,7 @@ public class GameFrame extends JFrame {
         sizeSlider.addChangeListener(e -> {
             showSizeLabel.setText("  " + sizeSlider.getValue());
             gridSize = sizeSlider.getValue();
-
-            if (isImageGame)
-                startNewPictureGame();
-            else
-                startNewNumberGame();
+            startNewGame();
         });
         scalingPanel.add(sizeSlider);
 
@@ -244,6 +240,13 @@ public class GameFrame extends JFrame {
 
         this.setVisible(true);
 
+    }
+
+    void startNewGame() {
+        if (isImageGame)
+            startNewPictureGame();
+        else
+            startNewNumberGame();
     }
 
     void resetMoveCounter() {
