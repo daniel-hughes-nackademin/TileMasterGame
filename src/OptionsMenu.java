@@ -7,8 +7,8 @@ public class OptionsMenu {
     static AdvertisingManager advertisingManager = new AdvertisingManager();
     static GameOverGirl gameOverGirl = new GameOverGirl(false);
     static int timeLimit = 90;
-    static double phases = 8;
-    static double phaseDelay = timeLimit/phases;
+    static final double PHASES = 8;
+    static double phaseDelay = timeLimit/ PHASES;
 
     public static void showOptions() {
 
@@ -115,7 +115,7 @@ public class OptionsMenu {
                 if (e.getSource() == timeLimitField) {
 
                     timeLimit = ((Number) timeLimitField.getValue()).intValue();
-                    phaseDelay = timeLimit / phases;
+                    phaseDelay = timeLimit / PHASES;
                 }
             });
             buttonPanel.add(timeLimitField);
