@@ -70,34 +70,35 @@ public class GameFrame extends JFrame {
 
         timerPauseButton = new MenuButton("Pause", "Graphics/Metallic Button.jpg");
         timerPauseButton.addActionListener(e -> {
-            if (timerPauseButton.getText() == "Pause") {
-                chronometer.stop();
-                timerPauseButton.setText("Resume");
+            switch (timerPauseButton.getText()) {
+                case "Pause":
+                    chronometer.stop();
+                    timerPauseButton.setText("Resume");
 
-                removeCenterComponent();
-                JLabel pauseLabel = new JLabel("PAUSED");
-                pauseLabel.setFont(new Font("Georgia", Font.BOLD, 60));
-                pauseLabel.setForeground(Color.WHITE);
+                    removeCenterComponent();
+                    JLabel pauseLabel = new JLabel("PAUSED");
+                    pauseLabel.setFont(new Font("Georgia", Font.BOLD, 60));
+                    pauseLabel.setForeground(Color.WHITE);
 
-                JPanel pausePanel = new JPanel(new GridBagLayout());
-                pausePanel.setBackground(Color.BLACK);
-                pausePanel.add(pauseLabel, new GridBagConstraints()); //Centers Label
-                backgroundPanel.add(pausePanel, BorderLayout.CENTER);
+                    JPanel pausePanel = new JPanel(new GridBagLayout());
+                    pausePanel.setBackground(Color.BLACK);
+                    pausePanel.add(pauseLabel, new GridBagConstraints()); //Centers Label
 
-            } else if (timerPauseButton.getText() == "New Game"){
-                startNewGame();
-            }
-            else if (timerPauseButton.getText() == "Resume"){
-                optionsMenuButton.setText("Options");
-                resumeGame();
+                    backgroundPanel.add(pausePanel, BorderLayout.CENTER);
+
+                    break;
+                case "New Game":
+                    startNewGame();
+                    break;
+                case "Resume":
+                    optionsMenuButton.setText("Options");
+                    resumeGame();
+                    break;
             }
         });
 
         MenuButton shuffleButton = new MenuButton("Shuffle", "Graphics/Metallic Button.jpg");
-        shuffleButton.addActionListener(e -> {
-            startNewGame();
-        });
-
+        shuffleButton.addActionListener(e -> startNewGame());
 
         ImagePanel scalingPanel = new ImagePanel("Graphics/Wooden Background.jpg", 350, 60);
         scalingPanel.setLayout(new FlowLayout());
@@ -226,16 +227,15 @@ public class GameFrame extends JFrame {
             startNewGame();
         });
         MenuButton customPictureGame = new MenuButton("Choose Picture", "Graphics/Metallic Button.jpg");
-        customPictureGame.addActionListener(e -> {
-            chooseCustomFile();
-        });
+        customPictureGame.addActionListener(e -> chooseCustomFile());
+
         optionsMenuButton = new MenuButton("Options", "Graphics/Metallic Button.jpg");
         optionsMenuButton.addActionListener(e -> {
-            if(optionsMenuButton.getText() == "Options"){
+            if(optionsMenuButton.getText().equals("Options")){
                 optionsMenuButton.setText("Go Back");
                 OptionsMenu.showOptions();
             }
-            else if(optionsMenuButton.getText() == "Go Back"){
+            else if(optionsMenuButton.getText().equals("Go Back")){
                 optionsMenuButton.setText("Options");
                 resumeGame();
             }
@@ -254,7 +254,7 @@ public class GameFrame extends JFrame {
 
     }
 
-    void resumeGame() {
+    private void resumeGame() {
         if( !(OptionsMenu.isActivatedGameOverMode && OptionsMenu.gameOverGirl.isGameOver)){
             chronometer.start();
         }
@@ -264,7 +264,7 @@ public class GameFrame extends JFrame {
         puzzleBoard.checkWinCondition();
     }
 
-    void startNewGame() {
+    private void startNewGame() {
         isCompletedPuzzle = false;
         optionsMenuButton.setText("Options");
         resetTimer();
