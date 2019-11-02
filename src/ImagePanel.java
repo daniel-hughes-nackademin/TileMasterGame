@@ -3,12 +3,12 @@ import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ImagePanel extends JPanel {
+class ImagePanel extends JPanel {
 
     private BufferedImage image;
     private String imagePath;
 
-    public ImagePanel(String imagePath, int width, int height){
+    ImagePanel(String imagePath, int width, int height){
         this.imagePath = imagePath;
         this.image = ImageTool.loadResizedImage(this.imagePath, width, height);
         Dimension size = new Dimension(width, height);
@@ -16,7 +16,7 @@ public class ImagePanel extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED), BorderFactory.createEtchedBorder(Color.DARK_GRAY, Color.BLACK)));
     }
 
-    public ImagePanel(BufferedImage image, int width, int height){
+    ImagePanel(BufferedImage image, int width, int height){
         this.image = ImageTool.getResizedImage(image, width, height);
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);

@@ -4,25 +4,25 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class GameOverGirl implements Runnable {
+class GameOverGirl implements Runnable {
 
-    Thread gameOverThread;
-    ImagePanel gameFacesPanel;
-    boolean isVictory;
+    private Thread gameOverThread;
+    private ImagePanel gameFacesPanel;
+    private boolean isVictory;
     boolean isGameOver = false;
 
 
-    public GameOverGirl(boolean isVictory) {
+    GameOverGirl(boolean isVictory) {
         this.isVictory = isVictory;
     }
 
-    public synchronized void showGameOverGirl() {
+    synchronized void showGameOverGirl() {
         OptionsMenu.isActivatedGameOverMode = true;
         gameOverThread = new Thread(this);
         gameOverThread.start();
     }
 
-    public synchronized void stopGameOverGirl() {
+    synchronized void stopGameOverGirl() {
         OptionsMenu.isActivatedGameOverMode = false;
         try {
             gameOverThread.interrupt();
@@ -56,7 +56,6 @@ public class GameOverGirl implements Runnable {
                 i++;
                 if (i == folderFileArray.length) {
                     i = 0;
-                    continue;
                 }
             } else {
                 folder = new File("src/Game Over Faces");

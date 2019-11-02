@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class ImageTool {
+class ImageTool {
 
-    public static BufferedImage loadImage(String filePath){
+    private static BufferedImage loadImage(String filePath){
         try{
         File inputFile = new File(filePath);
         if(inputFile.isAbsolute())
@@ -21,7 +21,7 @@ public class ImageTool {
         return null;
     }
 
-    public static BufferedImage getResizedImage(BufferedImage picture, int width, int height){
+    static BufferedImage getResizedImage(BufferedImage picture, int width, int height){
         BufferedImage resizedImage = new BufferedImage(width, height, picture.getType());
         Graphics2D g2d = resizedImage.createGraphics();
         g2d.drawImage(picture, 0, 0, width, height, null);
@@ -30,19 +30,18 @@ public class ImageTool {
         return resizedImage;
     }
 
-    public static BufferedImage loadResizedImage(String filePath, int width, int height){
+    static BufferedImage loadResizedImage(String filePath, int width, int height){
         BufferedImage image = loadImage(filePath);
         image = getResizedImage(image, width, height);
 
         return image;
     }
 
-    public static ImageIcon makeScaledImageIcon(String filePath, int width, int height){
+    static ImageIcon makeScaledImageIcon(String filePath, int width, int height){
         BufferedImage image = loadImage(filePath);
         Image imageScaled = image.getScaledInstance(width,height, Image.SCALE_DEFAULT);
-        ImageIcon icon = new ImageIcon(imageScaled);
 
-        return icon;
+        return new ImageIcon(imageScaled);
     }
 
 

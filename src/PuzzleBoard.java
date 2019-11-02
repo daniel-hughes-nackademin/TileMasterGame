@@ -8,13 +8,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PuzzleBoard extends JPanel implements ActionListener {
+class PuzzleBoard extends JPanel implements ActionListener {
     static List<Tile> tiles = new ArrayList<>();
 
-    protected String imagePath;
     private int width = 500, height = 500;
 
-    public PuzzleBoard(int gridSize) {
+    PuzzleBoard(int gridSize) {
 
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);
@@ -29,9 +28,8 @@ public class PuzzleBoard extends JPanel implements ActionListener {
     }
 
 
-    public PuzzleBoard(String imagePath, int gridSize) { //Creates a puzzle board with image pieces
+    PuzzleBoard(String imagePath, int gridSize) { //Creates a puzzle board with image pieces
         tiles.clear();
-        this.imagePath = imagePath;
         BufferedImage originalImage = ImageTool.loadResizedImage(imagePath, width, height);
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);
@@ -59,7 +57,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
 
     }
 
-    public PuzzleBoard(ImageIcon icon, int gridSize) { //Creates a puzzle board with number tiles
+    PuzzleBoard(ImageIcon icon, int gridSize) { //Creates a puzzle board with number tiles
         tiles.clear();
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);
@@ -176,7 +174,7 @@ public class PuzzleBoard extends JPanel implements ActionListener {
         Game.gameFrame.moveCountLabel.setText("Moves: " + Game.gameFrame.moveCount);
     }
 
-    public void checkWinCondition() {
+    void checkWinCondition() {
         for (int i = 0; i < tiles.size(); i++) {
             if (tiles.get(i).correctOrderIndex != i)
                 return;

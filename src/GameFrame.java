@@ -32,7 +32,7 @@ class GameFrame extends JFrame {
     boolean isImageGame = true;
 
     Timer chronometer;
-    private int seconds, minutes, hours;
+    int seconds, minutes, hours;
     MenuButton timerPauseButton;
     private MenuButton optionsMenuButton;
 
