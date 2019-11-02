@@ -6,37 +6,37 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Random;
 
-public class GameFrame extends JFrame {
+class GameFrame extends JFrame {
 
     private static String title = "Tile Master - The Amazing Puzzle Game";
-    int width = 900;
+    private int width = 900;
     int height = 800;
     int gridSize = 4;
     int moveCount = 0;
     JLabel moveCountLabel;
-    JLabel timeLabel;
+    private JLabel timeLabel;
 
 
-    JLabel showSizeLabel;
-    JSlider sizeSlider;
-    PuzzleBoard puzzleBoard;
+    private JLabel showSizeLabel;
+    private JSlider sizeSlider;
+    private PuzzleBoard puzzleBoard;
     JPanel backgroundPanel;
     ImagePanel advertisingBanner;
     JPanel eastComponentPanel;
-    ImagePanel westComponentPanel;
+    private ImagePanel westComponentPanel;
     ImagePanel miniPicture;
 
-    File lastDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Pictures");
+    private File lastDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Pictures");
     String imagePath = "Graphics/Military Anime Girl.jpg";
     boolean isCompletedPuzzle = false;
     boolean isImageGame = true;
 
     Timer chronometer;
-    int seconds, minutes, hours;
+    private int seconds, minutes, hours;
     MenuButton timerPauseButton;
-    MenuButton optionsMenuButton;
+    private MenuButton optionsMenuButton;
 
-    public GameFrame() {
+    GameFrame() {
         this.setResizable(false);
         Dimension size = new Dimension(width, height);
         this.setTitle(title);
@@ -47,7 +47,7 @@ public class GameFrame extends JFrame {
     }
 
 
-    public void initializeMainMenu() {
+    void initializeMainMenu() {
         //=====================================Adding the background panel=============================================
         backgroundPanel = new JPanel(new BorderLayout());
         this.add(backgroundPanel);
@@ -269,42 +269,39 @@ public class GameFrame extends JFrame {
         optionsMenuButton.setText("Options");
         resetTimer();
         removeCenterComponent();
+        eastComponentPanel.remove(miniPicture);
 
         if(isImageGame){
             puzzleBoard = new PuzzleBoard(imagePath, gridSize);
+            miniPicture = new ImagePanel(imagePath, 250, 250);
         }
         else{
             int iconSideLength = puzzleBoard.getWidth() / gridSize;
             ImageIcon icon = ImageTool.makeScaledImageIcon("Graphics/Number Button.jpg", iconSideLength, iconSideLength);
             puzzleBoard = new PuzzleBoard(icon, gridSize);
+            miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
         }
         automaticallySwapTilesRandomly();
         backgroundPanel.add(puzzleBoard);
-        eastComponentPanel.remove(miniPicture);
-
-        if(isImageGame){
-            miniPicture = new ImagePanel(imagePath, 250, 250);
-        }
-        else {
-            miniPicture = new ImagePanel("Graphics/Sort The Numbers.jpg", 250, 250);
-        }
         eastComponentPanel.add(miniPicture, BorderLayout.NORTH);
+
         if (OptionsMenu.isActivatedGameOverMode) {
             OptionsMenu.gameOverGirl.stopGameOverGirl();
             OptionsMenu.gameOverGirl = new GameOverGirl(false);
             OptionsMenu.gameOverGirl.showGameOverGirl();
         }
+
         Game.gameFrame.resetMoveCounter();
         this.revalidate();
     }
 
-    void resetMoveCounter() {
+    private void resetMoveCounter() {
         moveCount = 0;
         moveCountLabel.setText("Moves: " + moveCount);
     }
 
 
-    public void refreshPuzzleBoard() {
+    void refreshPuzzleBoard() {
         removeCenterComponent();
         puzzleBoard = new PuzzleBoard(gridSize);
         backgroundPanel.add(puzzleBoard, BorderLayout.CENTER);
@@ -320,12 +317,12 @@ public class GameFrame extends JFrame {
         }
     }
 
-    protected void removeCenterComponent() {
+    void removeCenterComponent() {
         BorderLayout layout = (BorderLayout) backgroundPanel.getLayout();
         backgroundPanel.remove(layout.getLayoutComponent(BorderLayout.CENTER));
     }
 
-    public void resetTimer() {
+    private void resetTimer() {
         seconds = 0;
         minutes = 0;
         hours = 0;
@@ -336,7 +333,7 @@ public class GameFrame extends JFrame {
         timerPauseButton.setText("Pause");
     }
 
-    public void chooseCustomFile() {
+    private void chooseCustomFile() {
         LookAndFeel originalLookAndFeel = UIManager.getLookAndFeel();
 
         try {
