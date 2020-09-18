@@ -36,8 +36,8 @@ public class AdvertisingManager implements Runnable {
 
     @Override
     public void run() {
-        showAdsFromWebAddressList();
-        //showAdsFromFileFolder();
+        //showAdsFromWebAddressList();
+        showAdsFromFileFolder();
     }
 
     private void showAdsFromWebAddressList() {

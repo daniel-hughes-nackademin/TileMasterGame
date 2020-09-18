@@ -84,10 +84,10 @@ public class GameFrame extends JFrame {
                 pausePanel.add(pauseLabel, new GridBagConstraints()); //Centers Label
                 backgroundPanel.add(pausePanel, BorderLayout.CENTER);
 
-            } else if (timerPauseButton.getText() == "New Game"){
+            } else if (timerPauseButton.getText().equals("New Game")){
                 startNewGame();
             }
-            else if (timerPauseButton.getText() == "Resume"){
+            else if (timerPauseButton.getText().equals("Resume")){
                 optionsMenuButton.setText("Options");
                 resumeGame();
             }
