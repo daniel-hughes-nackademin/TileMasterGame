@@ -9,16 +9,16 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdvertisingManager implements Runnable {
-    Thread advertisingThread;
+class AdvertisingManager implements Runnable {
+    private Thread advertisingThread;
 
-    public synchronized void showAdvertising() {
+    synchronized void showAdvertising() {
         OptionsMenu.isShowingAdvertising = true;
         advertisingThread = new Thread(this);
         advertisingThread.start();
     }
 
-    public synchronized void stopAdvertising() {
+    synchronized void stopAdvertising() {
         OptionsMenu.isShowingAdvertising = false;
         try {
             advertisingThread.interrupt();
@@ -77,7 +77,7 @@ public class AdvertisingManager implements Runnable {
         }
     }
 
-    public void showAdsFromFileFolder(){
+    private void showAdsFromFileFolder(){
         File folder = new File("src/AdvertisingImages");
         File[] folderFileArray = folder.listFiles();
         int i = 0;

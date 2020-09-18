@@ -9,10 +9,10 @@ public class Tile extends JButton {
     int x, y;
     ImageIcon icon = null;
 
-    public Tile(){}
+    Tile(){}
 
     //Makes a SQUARE tile button for the puzzle board with image icon
-    public Tile(int gridSize, int correctOrderIndex, BufferedImage originalImage) {
+    Tile(int gridSize, int correctOrderIndex, BufferedImage originalImage) {
         this.sideLength = originalImage.getWidth()/gridSize; //width equals height since it's a square tile
         this.correctOrderIndex = correctOrderIndex;
         setXandY(correctOrderIndex, gridSize);
@@ -25,7 +25,7 @@ public class Tile extends JButton {
         }
     }
 
-    protected ImageIcon makeTileImageIcon(BufferedImage originalImage){
+    private ImageIcon makeTileImageIcon(BufferedImage originalImage){
         BufferedImage tileImage = new BufferedImage(sideLength, sideLength, originalImage.getType());
 
         Graphics2D gr = tileImage.createGraphics();
@@ -35,7 +35,7 @@ public class Tile extends JButton {
         return new ImageIcon(tileImage);
     }
 
-   public void setXandY(int index, int gridSize){
+   void setXandY(int index, int gridSize){
         this.x = index%gridSize;
         this.y = index/gridSize;
 

@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class NumberTile extends Tile {
+class NumberTile extends Tile {
 
     //Makes a SQUARE tile button for the puzzle board with image icon
-    public NumberTile (int gridSize, int value, ImageIcon icon) {
+    NumberTile(int gridSize, int value, ImageIcon icon) {
         this.sideLength = icon.getIconWidth(); //width equals height since it's a square tile
         this.correctOrderIndex = value;
         setXandY(value, gridSize);

@@ -1,16 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class OptionsMenu {
+class OptionsMenu {
     static boolean isShowingAdvertising = true;
     static boolean isActivatedGameOverMode = false;
     static AdvertisingManager advertisingManager = new AdvertisingManager();
     static GameOverGirl gameOverGirl = new GameOverGirl(false);
     static int timeLimit = 90;
-    static final double PHASES = 8;
+    private static final double PHASES = 8;
     static double phaseDelay = timeLimit/ PHASES;
 
-    public static void showOptions() {
+    static void showOptions() {
 
 
         Game.gameFrame.chronometer.stop();
